@@ -21,8 +21,24 @@ Desarrollar un sistema web de gestión de inventarios que permita administrar de
 
 ## Alcance
 
-El proyecto contempla el desarrollo de una aplicación web orientada a la gestión básica de inventarios. Dentro del alcance se incluye el registro y administración de productos, consulta de existencias, actualización de información y gestión de los movimientos de entrada y salida de productos.
+El proyecto contempla el análisis, diseño, desarrollo y puesta en funcionamiento de una aplicación web para la gestión y control básico de inventarios, orientada a facilitar el registro, consulta y seguimiento de los productos y de los movimientos que afectan sus existencias.
 
-También se contempla la organización de la información necesaria para facilitar el seguimiento del inventario y la implementación de una interfaz que permita a los usuarios interactuar con las principales funcionalidades del sistema de manera clara y sencilla.
+El sistema permitirá administrar la información asociada a los productos, incluyendo su registro, actualización, consulta y clasificación. Asimismo, permitirá consultar las existencias disponibles y mantener actualizadas las cantidades de inventario a partir del registro de movimientos de entrada y salida de productos.
 
-El desarrollo se realizará de forma incremental utilizando Scrum, por lo que las funcionalidades podrán ser implementadas y mejoradas progresivamente durante los diferentes ciclos de desarrollo.
+Dentro del alcance funcional se contempla el desarrollo de los siguientes módulos y funcionalidades principales:
+
+- Gestión de productos: registro, consulta, modificación y organización de los productos almacenados en el sistema.
+- Clasificación de productos: organización de los productos mediante categorías y/o subcategorías para facilitar su búsqueda y administración.
+- Consulta de inventario: visualización de las existencias actuales de cada producto.
+- Movimientos de inventario: registro de entradas y salidas de productos, permitiendo mantener un historial de los movimientos realizados.
+- Actualización de existencias: modificación de las cantidades disponibles de acuerdo con los movimientos registrados.
+- Búsqueda y consulta: mecanismos de búsqueda y filtrado que permitan localizar productos e información del inventario de manera eficiente.
+- Gestión de usuarios y permisos: control del acceso a las funcionalidades del sistema de acuerdo con los roles definidos para el proyecto.
+- Persistencia de la información: almacenamiento de los datos del inventario y sus movimientos en una base de datos.
+- Interfaz de usuario: desarrollo de una interfaz web clara, intuitiva y consistente que facilite la interacción con las funcionalidades principales del sistema.
+
+El sistema estará orientado a usuarios encargados de la administración y control del inventario. Las funcionalidades disponibles para cada usuario dependerán de los roles y permisos establecidos durante el diseño del sistema.
+
+El proyecto no contempla, dentro de su alcance inicial, funcionalidades relacionadas con facturación electrónica, contabilidad, comercio electrónico, integración con plataformas externas, control financiero o procesos empresariales que no estén directamente relacionados con la gestión básica del inventario. Estas funcionalidades podrán considerarse como posibles ampliaciones futuras.
+
+El desarrollo se realizará bajo la metodología Scrum, mediante ciclos incrementales denominados Sprints. En cada Sprint se priorizarán, diseñarán, desarrollarán y validarán determinadas funcionalidades, permitiendo obtener incrementos funcionales del producto y realizar ajustes de acuerdo con los resultados de las revisiones y las necesidades identificadas durante el desarrollo.
