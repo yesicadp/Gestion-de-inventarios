@@ -42,3 +42,62 @@ El sistema estará orientado a usuarios encargados de la administración y contr
 El proyecto no contempla, dentro de su alcance inicial, funcionalidades relacionadas con facturación electrónica, contabilidad, comercio electrónico, integración con plataformas externas, control financiero o procesos empresariales que no estén directamente relacionados con la gestión básica del inventario. Estas funcionalidades podrán considerarse como posibles ampliaciones futuras.
 
 El desarrollo se realizará bajo la metodología Scrum, mediante ciclos incrementales denominados Sprints. En cada Sprint se priorizarán, diseñarán, desarrollarán y validarán determinadas funcionalidades, permitiendo obtener incrementos funcionales del producto y realizar ajustes de acuerdo con los resultados de las revisiones y las necesidades identificadas durante el desarrollo.
+
+##Funcionamiento general
+El usuario accede al sistema mediante un navegador.
+El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
+El frontend envía solicitudes HTTP a la API REST.
+La API verifica la autenticación, los permisos y los datos recibidos.
+Cada solicitud se dirige al módulo correspondiente.
+La capa de negocio aplica las reglas del inventario.
+La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
+La API devuelve una respuesta en formato JSON y el frontend actualiza la interfaz.
+
+
+Módulo	                Responsabilidad principal	                Funciones
+Autenticación	          Controlar el acceso	                      Inicio y cierre de sesión
+Usuarios y permisos	    Administrar roles y autorizaciones	      Crear usuarios, asignar roles y validar permisos
+Productos	              Administrar productos	                    Registrar, consultar, modificar y desactivar
+Categorías	            Clasificar productos	                    Crear categorías y subcategorías
+Inventario	            Consultar existencias	                    Mostrar cantidades actuales y alertas
+Movimientos	            Registrar cambios de inventario	          Entradas, salidas e historial
+Existencias	            Actualizar cantidades	                    Incrementar o disminuir el inventario
+Búsqueda	              Localizar información	                    Buscar y filtrar productos y movimientos
+Auditoría	              Facilitar el seguimiento	                Registrar usuario, fecha y operación
+
+##estructuracion modular inicial 
+
+inventario/
+├── frontend/
+│   ├── pages/
+│   ├── css/
+│   ├── js/
+│   └── assets/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config/
+│   │   ├── database/
+│   │   ├── shared/
+│   │   │   ├── exceptions/
+│   │   │   ├── security/
+│   │   │   └── utilities/
+│   │   └── modules/
+│   │       ├── configuraciones/
+│   │       ├── authentication/
+│   │       ├── users/
+│   │       ├── roles/
+│   │       ├── products/
+│   │       ├── categories/
+│   │       ├── inventory/
+│   │       └── movements/
+│   └── tests/
+│
+├── database/
+│   ├── migrations/
+│   └── scripts/
+│
+└── documentation/
+
+
