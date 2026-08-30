@@ -101,3 +101,30 @@ inventario/
 └── documentation/
 
 
+## Base de datos
+
+La persistencia de la información del sistema se realizará mediante **MySQL**.
+
+La estructura inicial de la base de datos contempla las siguientes entidades principales:
+
+* **Usuarios:** gestión de las cuentas y acceso de los usuarios.
+* **Roles:** definición de los roles y permisos de acceso.
+* **Productos:** información y estado de los productos registrados.
+* **Categorías:** clasificación de los productos, incluyendo categorías y subcategorías.
+* **Proveedores:** información asociada a los proveedores de los productos.
+* **Movimientos:** registro de las entradas y salidas de inventario.
+
+La base de datos permitirá mantener centralizada la información del inventario y conservar el historial de los movimientos realizados.
+
+## Estado actual
+
+La estructura detallada de la base de datos se encuentra en proceso de definición. Posteriormente se incorporarán:
+
+* Modelo entidad-relación.
+* Definición de tablas, campos y relaciones.
+* Claves primarias y foráneas.
+* Restricciones e índices.
+* Script SQL para la creación de la base de datos.
+* Procedimientos almacenados, en caso de ser necesarios.
+
+
