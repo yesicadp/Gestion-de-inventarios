@@ -65,7 +65,7 @@ Existencias	            Actualizar cantidades	                    Incrementar o 
 Búsqueda	              Localizar información	                    Buscar y filtrar productos y movimientos
 Auditoría	              Facilitar el seguimiento	                Registrar usuario, fecha y operación
 
-##estructuracion modular inicial 
+## estructuracion modular inicial 
 
 inventario/
 ├── frontend/
