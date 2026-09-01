@@ -36,19 +36,3 @@ El proyecto se desarrolla bajo la metodología ágil **Scrum**, organizando el t
 | Sprint 2 | Gestión de productos y categorías |
 | Sprint 3 | Inventario, movimientos y alertas de existencia |
 | Sprint 4 | Búsqueda, auditoría, pulido general y evidencias finales |
-
-## Herramientas de gestión
-
-| Herramienta | Uso |
-|---|---|
-| GitHub | Repositorio de código y documentación, control de versiones |
-| _(Trello / Jira / GitHub Projects — definir)_ | Tablero del backlog y seguimiento de historias de usuario |
-| _(Definir)_ | Comunicación del equipo |
-
-## Definición de "Terminado" (Definition of Done)
-
-Una historia de usuario se considera terminada cuando:
-- La funcionalidad está implementada y accesible desde la interfaz.
-- Fue probada manualmente por al menos un integrante distinto a quien la desarrolló.
-- No rompe funcionalidades existentes.
-- Está documentada (si aplica) y su código está en la rama principal del repositorio.

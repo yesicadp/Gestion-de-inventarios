@@ -23,7 +23,7 @@ Desarrollar un sistema web de gestión de inventarios que permita administrar de
 
 ## Alcance
 
-El proyecto contempla el análisis, diseño, desarrollo y puesta en funcionamiento de una aplicación web para la gestión y control básico de inventarios, orientada a facilitar el registro, consulta y seguimiento de los productos y de los movimientos que afectan sus existencias.
+El proyecto contempla el análisis, diseño, desarrollo y puesta en funcionamiento de una plataforma web para la gestión y control básico de inventarios, orientada a facilitar el registro, consulta y seguimiento de los productos y de los movimientos que afectan sus existencias.
 
 Dentro del alcance funcional se contemplan los siguientes módulos:
 
@@ -49,6 +49,6 @@ Dentro del alcance funcional se contemplan los siguientes módulos:
 
 | Integrante | Frente | Responsabilidad |
 |---|---|---|
-| _Yesica_ | Frontend | HTML, CSS, JavaScript — interfaz de usuario y consumo de la API |
-| _Rowinzon_ | Backend | Python (API REST) — lógica de negocio y endpoints |
-| _Maicol_ | Base de datos | Diseño e implementación en MySQL |
+| _Yesica y Felipe_ | Frontend | HTML, CSS, JavaScript — interfaz de usuario y consumo de la API |
+| _Rowinzon y Felipe_ | Backend | Python (API REST) — lógica de negocio y endpoints |
+| _Maicol y Felipe_ | Base de datos | Diseño e implementación en MySQL |

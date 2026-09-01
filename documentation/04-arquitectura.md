@@ -2,7 +2,7 @@
 
 ## Estilo arquitectónico elegido
 
-**Monolito organizado por capas (layered monolith).**
+**Monolito organizado por capas.**
 
 ### Justificación
 - El equipo es pequeño y trabaja en un solo repositorio; un monolito reduce la complejidad de despliegue y coordinación frente a una arquitectura de microservicios.
@@ -33,9 +33,3 @@
 | Mecanismo de autenticación (sesión vs JWT) | Pendiente | Afecta al frontend (manejo de token) y a la API |
 | Modelo entidad-relación definitivo | Pendiente | Ver `08-evidencias-funcionamiento.md` y carpeta `database/` |
 | Despliegue (hosting de frontend/backend/BD) | Pendiente | Definir antes de la entrega final |
-
-## Evidencias de arquitectura
-
-- [ ] Diagrama de despliegue
-- [ ] Diagrama entidad-relación (base de datos)
-- [ ] Diagrama de endpoints de la API
