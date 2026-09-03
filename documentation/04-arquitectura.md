@@ -14,7 +14,7 @@
 | Capa | Responsabilidad | Tecnología |
 |---|---|---|
 | Presentación | Interfaz de usuario, formularios, tablas, validaciones de entrada básicas | HTML, CSS, JavaScript |
-| API / Aplicación | Exponer endpoints REST, autenticación, orquestar la lógica de negocio | Python (framework por definir: Flask o Django) |
+| API / Aplicación | Exponer endpoints REST, autenticación, orquestar la lógica de negocio | Python (Flask) |
 | Negocio | Reglas del inventario (validaciones de existencia, permisos por rol) | Python |
 | Acceso a datos | Consultas y persistencia | Python + conector MySQL |
 | Base de datos | Almacenamiento de la información | MySQL |
