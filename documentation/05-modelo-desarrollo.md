@@ -2,21 +2,7 @@
 
 ## Metodología: Scrum
 
-El proyecto se desarrolla bajo la metodología ágil **Scrum**, organizando el trabajo en ciclos incrementales (Sprints). En cada Sprint se priorizan, diseñan, desarrollan y validan funcionalidades específicas, permitiendo obtener incrementos funcionales del producto y ajustar el trabajo según los resultados de las revisiones.
-
-## Roles Scrum del equipo
-
-| Rol Scrum | Integrante(s) | Notas |
-|---|---|---|
-| Product Owner | _(definir)_ | Prioriza el backlog y representa las necesidades del "cliente" (profesor/enunciado) |
-| Scrum Master | _(definir)_ | Facilita las ceremonias y remueve impedimentos |
-| Equipo de desarrollo | Todo el grupo | Subdividido en frontend, backend y base de datos |
-
-## Artefactos
-
-- **Product Backlog**: lista priorizada de historias de usuario (ver `06-historias-usuario.md`).
-- **Sprint Backlog**: subconjunto de historias comprometidas para el sprint en curso.
-- **Incremento**: funcionalidad entregada y validada al final de cada sprint.
+El proyecto se desarrolla bajo la metodología ágil **Scrum**, organizando el trabajo en ciclos incrementales (Sprints). En cada Sprint se priorizan, diseñan, desarrollan y validan funcionalidades específicas, permitiendo obtener incrementos funcionales del producto y ajustar el trabajo según los resultados de las revisiones.|
 
 ## Ceremonias
 

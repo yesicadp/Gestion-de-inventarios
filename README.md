@@ -43,7 +43,7 @@ El proyecto no contempla, dentro de su alcance inicial, funcionalidades relacion
 
 El desarrollo se realizará bajo la metodología Scrum, mediante ciclos incrementales denominados Sprints. En cada Sprint se priorizarán, diseñarán, desarrollarán y validarán determinadas funcionalidades, permitiendo obtener incrementos funcionales del producto y realizar ajustes de acuerdo con los resultados de las revisiones y las necesidades identificadas durante el desarrollo.
 
-##Funcionamiento general
+## Funcionamiento general
 El usuario accede al sistema mediante un navegador.
 El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
 El frontend envía solicitudes HTTP a la API REST.
@@ -126,5 +126,3 @@ La estructura detallada de la base de datos se encuentra en proceso de definici�
 * Restricciones e índices.
 * Script SQL para la creación de la base de datos.
 * Procedimientos almacenados, en caso de ser necesarios.
-
-
