@@ -69,6 +69,8 @@ def iniciar_sesion():
     password = data.get("password")
 
     # Aquí puedes agregar la lógica de autenticación, por ejemplo, verificar el usuario y la contraseña en una base de datos.
+    # crear un usuario de servicio username == "admin" and password == "password" privilegios y token ilimitado
+    # determinar estructura de los usuarios ejem pepito.p@aun pepito.p@unal 
     if username == "admin" and password == "password":
         datos_token = {
         "usuario": username,
