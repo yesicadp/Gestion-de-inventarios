@@ -47,6 +47,16 @@ Este archivo documenta las decisiones técnicas del backend, el motivo de cada d
 - ¿Para qué?: Para que el navegador permita las solicitudes del frontend hacia la API.
 - Nota: En producción se debe limitar el origen permitido en lugar de permitir cualquier origen.
 
+## DEC-006: Separar la autenticación en un módulo
+
+- Fecha: 2026-09-06
+- Estado: Aprobada
+- Decisión: Organizar la autenticación en el módulo `modules/authentication`, separando las rutas de login y la validación de tokens.
+- ¿Por qué?: Evita concentrar toda la lógica en `main.py` y facilita el mantenimiento del proyecto.
+- ¿Para qué?: Para que `routes.py` gestione el login y `decorators.py` valide los tokens JWT.
+- Alternativas consideradas: Mantener toda la lógica de autenticación en `main.py`.
+- Consecuencias: El proyecto queda más organizado y permite reutilizar el decorador `requiere_token` en diferentes rutas.
+
 ## Plantilla para nuevas decisiones
 
 ## DEC-XXX: Título de la decisión
