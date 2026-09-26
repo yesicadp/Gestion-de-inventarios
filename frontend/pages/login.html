@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Sistema de Gestión de Inventarios</title>
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/auth.css">
+
+  <!-- Carga del SDK oficial de Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      
+      <!-- Logotipo o Icono del Sistema -->
+      <div class="logo-container">
+        <img src="../assets/img/logo.png" alt="Logo Inventario" class="logo-img" onerror="this.style.display='none'">
+        <div class="logo-placeholder"></div>
+      </div>
+
+      <h2>Sistema de Gestión de Inventarios</h2>
+
+      <!-- Mensaje de error / éxito -->
+      <div id="alert-message" class="alert hidden"></div>
+
+      <!-- Formulario de Login -->
+      <form id="login-form">
+        
+        <div class="form-group">
+          <label for="username">Correo electrónico / Usuario</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Ej. usuario@correo.com" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••" 
+            required
+          >
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="remember">
+            <span>Recordarme</span>
+          </label>
+          <a href="#" class="forgot-password">¿Olvidó su contraseña?</a>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-primary">
+          Iniciar sesión
+        </button>
+      </form>
+
+      <!-- Divisor -->
+      <div class="divider">
+        <span>O continúa con</span>
+      </div>
+
+      <!-- Botón de autenticación con Google -->
+      <div class="google-btn-container">
+        <div id="g_id_onload"
+             data-client_id="TU_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+             data-callback="handleGoogleLogin"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" 
+             data-type="standard" 
+             data-size="large" 
+             data-theme="outline" 
+             data-text="sign_in_with" 
+             data-shape="rectangular" 
+             data-logo_alignment="left"
+             data-width="100%">
+        </div>
+      </div>
+
+      <p class="footer-text">
+        Acceso exclusivo para Administrador y Usuario registrado
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Scripts JS -->
+  <script src="../js/auth.js"></script>
+</body>
+</html>

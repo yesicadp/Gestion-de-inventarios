@@ -18,7 +18,7 @@
 - [x] Mockups de las pantallas principales (9 pantallas)
 - [x] Historias de usuario (23 historias, 8 módulos)
 - [ ] Modelo entidad-relación de la base de datos
-- [ ] Definición de framework backend (Flask/Django)
+- [x] Definición de framework backend (Flask/Django)
 
 **Pendiente para el siguiente sprint:**
 - Iniciar implementación de autenticación y gestión de usuarios (Sprint 1).
