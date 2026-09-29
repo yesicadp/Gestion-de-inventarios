@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel principal - Sistema de Gestión de Inventarios</title>
+
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/dashboard.css">
+</head>
+<body class="app-body">
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Gestión de Inventarios</div>
+      <nav>
+        <a href="dashboard.html" class="active">Panel principal</a>
+        <a href="productos.html">Productos</a>
+        <a href="categorias.html">Categorías</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="movimiento-form.html">Movimientos</a>
+        <a href="historial.html">Historial</a>
+        <a href="usuarios.html" data-solo-admin>Usuarios</a>
+        <a href="auditoria.html" data-solo-admin>Auditoría</a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="user-info">
+          <span>Hola, <strong id="user-name">—</strong></span>
+          <span class="role-badge" id="user-role">—</span>
+        </div>
+        <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
+      </header>
+
+      <main class="content">
+        <h1>Panel principal</h1>
+        <p class="subtitle">Resumen general del inventario</p>
+
+        <div class="panel">
+          <h2>Estado de la conexión</h2>
+          <div class="status-line">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Verificando sesión con el backend…</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Total productos</div>
+            <div class="value">—</div>
+            <div class="pending-note">Pendiente: conectar a GET /api/productos</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Existencias bajas</div>
+            <div class="value">—</div>
+            <div class="pending-note">Pendiente: conectar a GET /api/inventario</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Movimientos hoy</div>
+            <div class="value">—</div>
+            <div class="pending-note">Pendiente: conectar a GET /api/movimientos</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Categorías activas</div>
+            <div class="value">—</div>
+            <div class="pending-note">Pendiente: conectar a GET /api/categorias</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Últimos movimientos registrados</h2>
+          <p class="pending-note">Esta tabla se llena cuando el módulo de Movimientos tenga su endpoint en el backend. Ver 09-especificacion-frontend.md para el contrato esperado.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

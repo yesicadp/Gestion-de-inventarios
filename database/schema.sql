@@ -9,7 +9,7 @@ CREATE TABLE roles (
     nombre_rol VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE usarios (
+CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     correo VARCHAR(150) NOT NULL UNIQUE,
@@ -90,4 +90,3 @@ INSERT INTO roles (nombre_rol)
 VALUES
     ('Administrador'),
     ('Usuario');
-    

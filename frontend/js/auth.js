@@ -30,14 +30,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Guardar token JWT en localStorage para usarlo en peticiones protegidas
+          // Guardar token JWT y datos del usuario (incluye el rol) en localStorage
           localStorage.setItem("token", data.token);
-          
+          localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
           mostrarAlerta(data.mensaje || "Inicio de sesión exitoso", "success");
 
-          // Redirigir a la vista principal / dashboard
+          // Redirigir al panel principal
           setTimeout(() => {
-            window.location.href = "dashboard.html"; // Cambia esta URL según tu vista principal
+            window.location.href = "dashboard.html";
           }, 1200);
 
         } else {

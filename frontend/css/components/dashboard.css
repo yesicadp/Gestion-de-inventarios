@@ -1,0 +1,186 @@
+/* Layout general del panel (sidebar + contenido) — reutiliza las variables de global.css */
+
+body.app-body {
+  display: block;
+  min-height: 100vh;
+  align-items: initial;
+  justify-content: initial;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+
+.sidebar .brand {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--primary-color);
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 12px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+
+.sidebar nav a:hover {
+  background-color: var(--bg-color);
+}
+
+.sidebar nav a.active {
+  border-left-color: var(--accent-color);
+  background-color: var(--bg-color);
+  font-weight: 600;
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.topbar .user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.topbar .user-info strong {
+  color: var(--text-color);
+}
+
+.role-badge {
+  background-color: var(--accent-color);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.btn-logout {
+  border: 1px solid var(--border-color);
+  background: none;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-logout:hover {
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
+.content {
+  padding: 28px;
+}
+
+.content h1 {
+  font-size: 22px;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+
+.content .subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.stat-card .label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.stat-card .value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.pending-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 6px;
+}
+
+.panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+}
+
+.status-dot.error {
+  background-color: var(--error-color);
+}
+
+.hidden {
+  display: none !important;
+}
