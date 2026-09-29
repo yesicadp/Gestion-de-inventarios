@@ -78,10 +78,16 @@ def iniciar_sesion():
         }), 200
 
     except Exception as error:
-        # No exponemos el detalle del error de BD al cliente, solo lo dejamos
-        # visible en consola del servidor para depurar en desarrollo.
-        print(f"[auth/login] Error de base de datos: {error}")
-        return jsonify({"mensaje": "No se pudo procesar el inicio de sesión"}), 500
+        import traceback
+
+        print("[auth/login] ERROR REAL:")
+        traceback.print_exc()
+
+        return jsonify({
+            "mensaje": "No se pudo procesar el inicio de sesión",
+            "error": str(error)
+        }), 500
+
     finally:
         if conexion is not None:
             conexion.close()

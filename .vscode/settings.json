@@ -1,5 +1,6 @@
 {
     "files.autoSave": "afterDelay",
     "git.enableSmartCommit": true,
-    "git.confirmSync": true
+    "git.confirmSync": true,
+    "liveServer.settings.port": 5501
 }
