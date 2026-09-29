@@ -18,5 +18,5 @@ def obtener_conexion():
         port=int(os.getenv("DB_PORT", "3306")),
         database=os.getenv("DB_NAME", "gestion_inventarios"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", ""),
+        password=os.getenv("DB_PASSWORD", "1234"),
     )
