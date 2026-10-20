@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de producto - Gestión de Inventarios</title>
+
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/dashboard.css">
+  <link rel="stylesheet" href="../css/components/productos.css">
+  <link rel="stylesheet" href="../css/components/producto-formulario.css">
+</head>
+<body class="app-body">
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Gestión de Inventarios</div>
+      <nav>
+        <a href="dashboard.html">Panel principal</a>
+        <a href="productos.html" class="active">Productos</a>
+        <a href="categorias.html">Categorías</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="movimiento-form.html">Movimientos</a>
+        <a href="historial.html">Historial</a>
+        <a href="usuarios.html" data-solo-admin>Usuarios</a>
+        <a href="auditoria.html" data-solo-admin>Auditoría</a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="user-info">
+          <span>Hola, <strong id="user-name">—</strong></span>
+          <span class="role-badge" id="user-role">—</span>
+        </div>
+        <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
+      </header>
+
+      <main class="content">
+        <h1 id="titulo-formulario">Nuevo producto</h1>
+        <p class="subtitle">Completa la información del producto.</p>
+
+        <section class="panel product-form-panel">
+          <form id="form-producto">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="codigo">Código del producto</label>
+                <input
+                    id="codigo"
+                    name="codigo"
+                    type="text"
+                    readonly
+                    required
+                    placeholder="Se genera automáticamente"
+                >
+                <small class="field-help">
+                    El código será asignado automáticamente por el sistema.
+                </small>
+              </div>
+
+              <div class="form-field">
+                <label for="nombre">Nombre del producto *</label>
+                <input id="nombre" name="nombre" type="text"
+                  maxlength="150" required placeholder="Nombre del producto">
+              </div>
+
+              <div class="form-field">
+                <label for="categoria">Categoría *</label>
+                <select id="categoria" name="categoria" required>
+                  <option value="">Selecciona una categoría</option>
+                  <option value="Periféricos">Periféricos</option>
+                  <option value="Pantallas">Pantallas</option>
+                  <option value="Accesorios">Accesorios</option>
+                </select>
+                <small class="field-help">
+                  Categorías de demostración; después se cargarán desde el backend.
+                </small>
+              </div>
+
+              <div class="form-field">
+                <label for="existencia">Existencias actuales *</label>
+                <input id="existencia" name="existencia" type="number"
+                  min="0" step="1" required value="0">
+              </div>
+
+              <div class="form-field">
+                <label for="minimo">Existencias mínimas *</label>
+                <input id="minimo" name="minimo" type="number"
+                  min="0" step="1" required value="1">
+              </div>
+
+              <div class="form-field">
+                <label for="estado">Estado *</label>
+                <select id="estado" name="estado" required>
+                  <option value="activo">Activo</option>
+                  <option value="inactivo">Inactivo</option>
+                </select>
+              </div>
+            </div>
+
+            <p id="mensaje-formulario" class="form-message" role="status"></p>
+
+            <div class="form-actions">
+              <a href="productos.html" class="btn-secondary">Cancelar</a>
+              <button type="submit" class="btn-primary" id="btn-guardar">
+                Guardar producto
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/producto-formulario.js"></script>
+</body>
+</html>

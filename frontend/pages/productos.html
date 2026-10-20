@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos - Gestión de Inventarios</title>
+
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/dashboard.css">
+  <link rel="stylesheet" href="../css/components/productos.css">
+</head>
+<body class="app-body">
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Gestión de Inventarios</div>
+      <nav>
+        <a href="dashboard.html">Panel principal</a>
+        <a href="productos.html" class="active">Productos</a>
+        <a href="categorias.html">Categorías</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="movimiento-form.html">Movimientos</a>
+        <a href="historial.html">Historial</a>
+        <a href="usuarios.html" data-solo-admin>Usuarios</a>
+        <a href="auditoria.html" data-solo-admin>Auditoría</a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="user-info">
+          <span>Hola, <strong id="user-name">—</strong></span>
+          <span class="role-badge" id="user-role">—</span>
+        </div>
+        <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
+      </header>
+
+      <main class="content">
+        <h1>Productos</h1>
+        <p class="subtitle">Consulta y administra los productos registrados en el sistema.</p>
+
+        <section class="panel products-panel">
+          <div class="products-toolbar">
+            <input
+              type="search"
+              id="buscar-producto"
+              placeholder="Buscar por nombre, código o categoría"
+              aria-label="Buscar productos"
+            >
+
+            <select id="filtro-categoria" aria-label="Filtrar por categoría">
+              <option value="">Todas las categorías</option>
+            </select>
+
+            <select id="filtro-estado" aria-label="Filtrar por estado">
+              <option value="">Todos los estados</option>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+
+            <button type="button" id="btn-nuevo-producto" class="btn-primary">
+              + Nuevo producto
+            </button>
+          </div>
+
+          <p id="mensaje-productos" class="products-message" role="status">
+            Cargando productos de prueba...
+          </p>
+
+          <div class="table-container">
+            <table class="products-table">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Existencias</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-productos">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="products-footer">
+            <span id="contador-productos">0 productos</span>
+            <div class="pagination">
+              <button type="button" id="pagina-anterior" disabled>Anterior</button>
+              <span id="pagina-actual">Página 1</span>
+              <button type="button" id="pagina-siguiente" disabled>Siguiente</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/productos.js"></script>
+</body>
+</html>
