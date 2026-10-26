@@ -45,17 +45,17 @@
           <form id="form-producto">
             <div class="form-grid">
               <div class="form-field">
-                <label for="codigo">Código del producto</label>
+                <label for="codigo">Código del producto *</label>
                 <input
-                    id="codigo"
-                    name="codigo"
-                    type="text"
-                    readonly
-                    required
-                    placeholder="Se genera automáticamente"
+                  id="codigo"
+                  name="codigo"
+                  type="text"
+                  maxlength="50"
+                  required
+                  placeholder="Ej. PROD-001"
                 >
                 <small class="field-help">
-                    El código será asignado automáticamente por el sistema.
+                  Escribe un código único para identificar el producto.
                 </small>
               </div>
 
@@ -64,17 +64,13 @@
                 <input id="nombre" name="nombre" type="text"
                   maxlength="150" required placeholder="Nombre del producto">
               </div>
-
               <div class="form-field">
                 <label for="categoria">Categoría *</label>
                 <select id="categoria" name="categoria" required>
-                  <option value="">Selecciona una categoría</option>
-                  <option value="Periféricos">Periféricos</option>
-                  <option value="Pantallas">Pantallas</option>
-                  <option value="Accesorios">Accesorios</option>
+                  <option value="">Cargando categorías...</option>
                 </select>
                 <small class="field-help">
-                  Categorías de demostración; después se cargarán desde el backend.
+                  Selecciona una categoría registrada en el sistema.
                 </small>
               </div>
 

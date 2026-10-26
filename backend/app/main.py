@@ -1,13 +1,15 @@
-from flask import Flask, jsonify
+﻿from flask import Flask, jsonify
 from flask_cors import CORS
 from app.modules.authentication.routes import authentication_bp
 from app.modules.authentication.decorators import requiere_token
 from app.modules.products.routes import products_bp
+from app.modules.categories.routes import categories_bp
 
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(authentication_bp)
 app.register_blueprint(products_bp)
+app.register_blueprint(categories_bp)
 
 @app.get("/")
 def inicio():
@@ -30,3 +32,4 @@ def perfil(datos_usuario):
 
 if __name__ == "__main__":
     app.run(debug=True)
+

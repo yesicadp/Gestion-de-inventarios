@@ -1,8 +1,12 @@
 
 document.addEventListener("DOMContentLoaded", () => {
+  const API_PRODUCTOS = "http://127.0.0.1:5000/api/productos";
+  const API_CATEGORIAS = "http://127.0.0.1:5000/api/categorias";
+
+  const token = localStorage.getItem("token");
+
   const form = document.getElementById("form-producto");
   const mensaje = document.getElementById("mensaje-formulario");
-  const titulo = document.getElementById("titulo-formulario");
   const botonGuardar = document.getElementById("btn-guardar");
 
   const campos = {
@@ -14,82 +18,98 @@ document.addEventListener("DOMContentLoaded", () => {
     estado: document.getElementById("estado")
   };
 
-  const claveDemo = "productosDemo";
-  const parametros = new URLSearchParams(window.location.search);
-  const codigoEditar = parametros.get("codigo");
+  let categoriasCargadas = false;
 
-  let productos = [];
-
-  try {
-    productos = JSON.parse(localStorage.getItem(claveDemo) || "[]");
-
-    if (!Array.isArray(productos)) {
-      productos = [];
-    }
-  } catch (error) {
-    productos = [];
-  }
-  
-  function generarCodigo() {
-    const codigosExistentes = productos.map(p => p.codigo);
-
-    let numero = 1;
-    let codigo;
-
-    do {
-        codigo = `PROD-${String(numero).padStart(3, "0")}`;
-        numero++;
-    } while (codigosExistentes.includes(codigo));
-
-    return codigo;
-  }
-  if (!codigoEditar) {
-  campos.codigo.value = generarCodigo();
+  if (!token) {
+    window.location.href = "login.html";
+    return;
   }
 
-  if (codigoEditar) {
-    const producto = productos.find(p => p.codigo === codigoEditar);
+  function mostrarMensaje(texto, esError = false) {
+    mensaje.textContent = texto;
+    mensaje.className = `form-message ${esError ? "error" : "success"}`;
+  }
 
-    if (producto) {
-      titulo.textContent = "Editar producto";
-      botonGuardar.textContent = "Guardar cambios";
+  // Cargar las categorías reales desde el backend.
+  async function cargarCategorias() {
+    campos.categoria.disabled = true;
+    campos.categoria.innerHTML =
+      '<option value="">Cargando categorías...</option>';
 
-      campos.codigo.value = producto.codigo;
-      campos.codigo.readOnly = true;
-      campos.nombre.value = producto.nombre;
-      campos.categoria.value = producto.categoria;
-      campos.existencia.value = producto.existencia;
-      campos.minimo.value = producto.minimo;
-      campos.estado.value = producto.estado ? "activo" : "inactivo";
-    } else {
-      mensaje.textContent =
-        "No se encontró ese producto en los datos de demostración.";
-      mensaje.className = "form-message error";
-      form.querySelectorAll("input, select, button").forEach(campo => {
-        campo.disabled = true;
+    try {
+      const respuesta = await fetch(API_CATEGORIAS, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
+      const datos = await respuesta.json();
+
+      if (respuesta.status === 401 || respuesta.status === 403) {
+        throw new Error(
+          "Tu sesión no está autorizada. Inicia sesión nuevamente."
+        );
+      }
+
+      if (!respuesta.ok) {
+        throw new Error(datos.mensaje || "No se pudieron cargar las categorías.");
+      }
+
+      const categorias = datos.categorias || [];
+
+      campos.categoria.innerHTML =
+        '<option value="">Selecciona una categoría</option>';
+
+      categorias.forEach((categoria) => {
+        const opcion = document.createElement("option");
+        opcion.value = categoria.id_categoria;
+        opcion.textContent = categoria.nombre;
+        campos.categoria.appendChild(opcion);
+      });
+
+      categoriasCargadas = true;
+      campos.categoria.disabled = false;
+
+      if (categorias.length === 0) {
+        mostrarMensaje(
+          "Primero debes registrar una categoría antes de crear un producto.",
+          true
+        );
+      }
+    } catch (error) {
+      console.error("Error al cargar categorías:", error);
+      campos.categoria.innerHTML =
+        '<option value="">No se pudieron cargar las categorías</option>';
+      mostrarMensaje(error.message, true);
+    }
+  }
+
+  // Guardar un producto en la base de datos.
+  form.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    if (!categoriasCargadas) {
+      mostrarMensaje("Espera a que se carguen las categorías.", true);
       return;
     }
-  }
-
-  form.addEventListener("submit", event => {
-    event.preventDefault();
 
     const codigo = campos.codigo.value.trim();
     const nombre = campos.nombre.value.trim();
-    const categoria = campos.categoria.value;
-    const existencia = Number(campos.existencia.value);
-    const minimo = Number(campos.minimo.value);
-    const estado = campos.estado.value === "activo";
+    const categoriaId = Number(campos.categoria.value);
+    const existenciaTexto = campos.existencia.value.trim();
+    const minimoTexto = campos.minimo.value.trim();
+    const existencia = Number(existenciaTexto);
+    const minimo = Number(minimoTexto);
+    const estado = campos.estado.value === "activo" ? 1 : 0;
 
-    if (!codigo || !nombre || !categoria) {
+    if (!codigo || !nombre || !campos.categoria.value) {
       mostrarMensaje("Completa todos los campos obligatorios.", true);
       return;
     }
 
     if (
-      campos.existencia.value.trim() === "" ||
-      campos.minimo.value.trim() === "" ||
+      existenciaTexto === "" ||
+      minimoTexto === "" ||
       !Number.isInteger(existencia) ||
       !Number.isInteger(minimo) ||
       existencia < 0 ||
@@ -102,59 +122,63 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const existeCodigo = productos.some(p =>
-        p.codigo.toLowerCase() === codigo.toLowerCase() &&
-        p.codigo !== codigoEditar
-    );
-
-    if (existeCodigo) {
-        campos.codigo.value = generarCodigo();
-        mostrarMensaje(
-            "El código ya estaba registrado. Se asignó uno nuevo; vuelve a guardar.",
-            true
-        );
-        return;
-    }
-
-    if (existeCodigo) {
-      mostrarMensaje("Ya existe un producto con ese código.", true);
-      return;
-    }
-
-    const producto = {
-      codigo,
-      nombre,
-      categoria,
-      existencia,
-      minimo,
-      estado
-    };
-
-    if (codigoEditar) {
-      productos = productos.map(p =>
-        p.codigo === codigoEditar ? producto : p
-      );
-    } else {
-      productos.push(producto);
-    }
+    botonGuardar.disabled = true;
+    mostrarMensaje("Guardando producto...");
 
     try {
-      localStorage.setItem(claveDemo, JSON.stringify(productos));
-      mostrarMensaje("Producto guardado en la demostración.", false);
+      const respuesta = await fetch(API_PRODUCTOS, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          codigo,
+          nombre,
+          categoria_id: categoriaId,
+          existencia_actual: existencia,
+          existencia_minima: minimo,
+          estado
+        })
+      });
+
+      const datos = await respuesta.json();
+
+      if (respuesta.status === 401 || respuesta.status === 403) {
+        mostrarMensaje(
+          "Tu sesión no está autorizada. Inicia sesión nuevamente.",
+          true
+        );
+        return;
+      }
+
+      if (!respuesta.ok) {
+        mostrarMensaje(
+          datos.mensaje || "No se pudo registrar el producto.",
+          true
+        );
+        return;
+      }
+
+      mostrarMensaje(
+        datos.mensaje || "Producto registrado correctamente."
+      );
+
+      form.reset();
 
       setTimeout(() => {
         window.location.href = "productos.html";
-      }, 700);
+      }, 900);
     } catch (error) {
+      console.error("Error al guardar producto:", error);
       mostrarMensaje(
-        "No se pudo guardar en el navegador. Revisa el almacenamiento disponible.",
+        "No fue posible conectar con el servidor. Verifica que Flask esté ejecutándose.",
         true
       );
+    } finally {
+      botonGuardar.disabled = false;
     }
   });
 
-  function mostrarMensaje(texto, esError) {
-    mensaje.textContent = texto;
-    mensaje.className = `form-message ${esError ? "error" : "success"}`;
-  }
+  cargarCategorias();
 });

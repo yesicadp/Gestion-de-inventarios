@@ -1,70 +1,7 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-  const productosIniciales = [
-    {
-      codigo: "PROD-001",
-      nombre: "Teclado USB",
-      categoria: "Periféricos",
-      existencia: 18,
-      minimo: 5,
-      estado: true
-    },
-    {
-      codigo: "PROD-002",
-      nombre: "Mouse inalámbrico",
-      categoria: "Periféricos",
-      existencia: 3,
-      minimo: 5,
-      estado: true
-    },
-    {
-      codigo: "PROD-003",
-      nombre: "Monitor 24 pulgadas",
-      categoria: "Pantallas",
-      existencia: 12,
-      minimo: 3,
-      estado: true
-    },
-    {
-      codigo: "PROD-004",
-      nombre: "Cable HDMI",
-      categoria: "Accesorios",
-      existencia: 0,
-      minimo: 4,
-      estado: false
-    },
-    {
-      codigo: "PROD-005",
-      nombre: "Memoria USB",
-      categoria: "Accesorios",
-      existencia: 25,
-      minimo: 8,
-      estado: true
-    },
-    {
-      codigo: "PROD-006",
-      nombre: "Base para portátil",
-      categoria: "Accesorios",
-      existencia: 9,
-      minimo: 3,
-      estado: true
-    }
-  ];
+  const API_PRODUCTOS = "http://127.0.0.1:5000/api/productos";
 
-  let productosPrueba = [];
-
-try {
-  const guardados = JSON.parse(
-    localStorage.getItem("productosDemo") || "[]"
-  );
-
-  productosPrueba = [
-    ...productosIniciales,
-    ...(Array.isArray(guardados) ? guardados : [])
-  ];
-} catch (error) {
-  productosPrueba = [...productosIniciales];
-}
+  const token = localStorage.getItem("token");
 
   const buscar = document.getElementById("buscar-producto");
   const filtroCategoria = document.getElementById("filtro-categoria");
@@ -75,30 +12,105 @@ try {
   const paginaActual = document.getElementById("pagina-actual");
   const anterior = document.getElementById("pagina-anterior");
   const siguiente = document.getElementById("pagina-siguiente");
+  const botonNuevo = document.getElementById("btn-nuevo-producto");
 
   const porPagina = 5;
+
+  let productos = [];
   let pagina = 1;
 
-  const categorias = [...new Set(
-    productosPrueba.map(producto => producto.categoria)
-  )];
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
 
-  categorias.forEach(categoria => {
-    const opcion = document.createElement("option");
-    opcion.value = categoria;
-    opcion.textContent = categoria;
-    filtroCategoria.appendChild(opcion);
-  });
+  // Consultar los productos registrados en la base de datos.
+  async function cargarProductos() {
+    mensaje.textContent = "Cargando productos...";
 
+    try {
+      const respuesta = await fetch(API_PRODUCTOS, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const datos = await respuesta.json();
+
+      if (respuesta.status === 401 || respuesta.status === 403) {
+        mensaje.textContent =
+          "Tu sesión no está autorizada. Inicia sesión nuevamente.";
+        return;
+      }
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.mensaje || "No fue posible consultar los productos."
+        );
+      }
+
+      productos = (datos.productos || []).map((producto) => ({
+        id: producto.id_producto,
+        codigo: producto.codigo,
+        nombre: producto.nombre,
+        categoria: producto.categoria,
+        existencia: Number(producto.existencia_actual),
+        minimo: Number(producto.existencia_minima),
+        estado:
+          producto.estado === true ||
+          producto.estado === 1 ||
+          producto.estado === "1"
+      }));
+
+      cargarFiltroCategorias();
+      renderizar();
+
+      mensaje.textContent = productos.length
+        ? "Productos consultados correctamente."
+        : "Todavía no hay productos registrados en la base de datos.";
+    } catch (error) {
+      console.error("Error al consultar productos:", error);
+      mensaje.textContent =
+        error.message || "No fue posible conectar con el servidor.";
+    }
+  }
+
+  // Llenar el filtro con las categorías que realmente tienen productos.
+  function cargarFiltroCategorias() {
+    const seleccionAnterior = filtroCategoria.value;
+
+    filtroCategoria.innerHTML =
+      '<option value="">Todas las categorías</option>';
+
+    const categorias = [
+      ...new Set(productos.map((producto) => producto.categoria))
+    ].sort((a, b) => a.localeCompare(b, "es"));
+
+    categorias.forEach((categoria) => {
+      const opcion = document.createElement("option");
+      opcion.value = categoria;
+      opcion.textContent = categoria;
+      filtroCategoria.appendChild(opcion);
+    });
+
+    if (categorias.includes(seleccionAnterior)) {
+      filtroCategoria.value = seleccionAnterior;
+    }
+  }
+
+  // Aplicar búsqueda y filtros.
   function obtenerFiltrados() {
     const texto = buscar.value.trim().toLowerCase();
 
-    return productosPrueba.filter(producto => {
+    return productos.filter((producto) => {
       const coincideTexto = [
         producto.codigo,
         producto.nombre,
         producto.categoria
-      ].some(valor => valor.toLowerCase().includes(texto));
+      ].some((valor) =>
+        String(valor || "").toLowerCase().includes(texto)
+      );
 
       const coincideCategoria =
         !filtroCategoria.value ||
@@ -119,18 +131,37 @@ try {
     return celda;
   }
 
+  // Mostrar la información en la tabla.
   function renderizar() {
     const filtrados = obtenerFiltrados();
-    const totalPaginas = Math.max(1, Math.ceil(filtrados.length / porPagina));
+    const totalPaginas = Math.max(
+      1,
+      Math.ceil(filtrados.length / porPagina)
+    );
 
-    if (pagina > totalPaginas) pagina = totalPaginas;
+    if (pagina > totalPaginas) {
+      pagina = totalPaginas;
+    }
 
     const inicio = (pagina - 1) * porPagina;
     const visibles = filtrados.slice(inicio, inicio + porPagina);
 
     tabla.replaceChildren();
 
-    visibles.forEach(producto => {
+    if (visibles.length === 0) {
+      const fila = document.createElement("tr");
+      const celda = crearCelda(
+        productos.length === 0
+          ? "No hay productos registrados."
+          : "No se encontraron productos con esos filtros."
+      );
+
+      celda.colSpan = 6;
+      fila.appendChild(celda);
+      tabla.appendChild(fila);
+    }
+
+    visibles.forEach((producto) => {
       const fila = document.createElement("tr");
 
       fila.appendChild(crearCelda(producto.codigo));
@@ -148,31 +179,34 @@ try {
 
       const celdaEstado = document.createElement("td");
       const etiqueta = document.createElement("span");
+
       etiqueta.className = `product-status ${
         producto.estado ? "active" : "inactive"
       }`;
+
       etiqueta.textContent = producto.estado ? "Activo" : "Inactivo";
       celdaEstado.appendChild(etiqueta);
       fila.appendChild(celdaEstado);
 
       const acciones = document.createElement("td");
-      const boton = document.createElement("button");
-      boton.type = "button";
-      boton.className = "product-action";
-      boton.textContent = "Editar";
-      boton.addEventListener("click", () => {
+      const botonEditar = document.createElement("button");
+
+      botonEditar.type = "button";
+      botonEditar.className = "product-action";
+      botonEditar.textContent = "Editar";
+
+      botonEditar.addEventListener("click", () => {
         const codigo = encodeURIComponent(producto.codigo);
+
         window.location.href =
-            `producto-formulario.html?codigo=${codigo}`;
+          `producto-formulario.html?codigo=${codigo}`;
       });
-      acciones.appendChild(boton);
+
+      acciones.appendChild(botonEditar);
       fila.appendChild(acciones);
 
       tabla.appendChild(fila);
     });
-
-    mensaje.textContent =
-      "Vista de demostración: estos productos son ficticios y todavía no vienen de la base de datos.";
 
     contador.textContent =
       `${filtrados.length} producto${filtrados.length === 1 ? "" : "s"}`;
@@ -182,7 +216,8 @@ try {
     siguiente.disabled = pagina >= totalPaginas;
   }
 
-  [buscar, filtroCategoria, filtroEstado].forEach(control => {
+  // Actualizar la tabla al cambiar los filtros.
+  [buscar, filtroCategoria, filtroEstado].forEach((control) => {
     control.addEventListener("input", () => {
       pagina = 1;
       renderizar();
@@ -202,7 +237,9 @@ try {
   });
 
   siguiente.addEventListener("click", () => {
-    const totalPaginas = Math.ceil(obtenerFiltrados().length / porPagina);
+    const totalPaginas = Math.ceil(
+      obtenerFiltrados().length / porPagina
+    );
 
     if (pagina < totalPaginas) {
       pagina++;
@@ -210,9 +247,10 @@ try {
     }
   });
 
-  document.getElementById("btn-nuevo-producto").addEventListener("click", () => {
-  window.location.href = "producto-formulario.html";
-});
+  botonNuevo.addEventListener("click", () => {
+    window.location.href = "producto-formulario.html";
+  });
 
-  renderizar();
+  // Cargar los datos al entrar a la página.
+  cargarProductos();
 });
