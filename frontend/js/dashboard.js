@@ -54,6 +54,8 @@ async function verificarSesionConBackend(token) {
     if (response.ok) {
       statusDot.classList.remove("error");
       statusText.textContent = "Conectado al backend — token válido.";
+      cargarTotalProductos(token);
+      cargarTotalCategorias(token);
     } else if (response.status === 401) {
       statusDot.classList.add("error");
       statusText.textContent = "Tu sesión expiró o el token no es válido. Vuelve a iniciar sesión.";
@@ -64,5 +66,51 @@ async function verificarSesionConBackend(token) {
   } catch (error) {
     statusDot.classList.add("error");
     statusText.textContent = "No se pudo conectar con el backend (¿está corriendo en el puerto 5000?).";
+  }
+}
+
+async function cargarTotalProductos(token) {
+  const elemento = document.getElementById("total-productos");
+
+  try {
+    const respuesta = await fetch(`${API_BASE}/api/productos`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudieron consultar los productos.");
+    }
+
+    const datos = await respuesta.json();
+    elemento.textContent = datos.total ?? (datos.productos || []).length;
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+    elemento.textContent = "Error";
+  }
+}
+
+async function cargarTotalCategorias(token) {
+  const elemento = document.getElementById("total-categorias");
+
+  try {
+    const respuesta = await fetch(`${API_BASE}/api/categorias`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudieron consultar las categorías.");
+    }
+
+    const datos = await respuesta.json();
+
+    elemento.textContent = datos.total ?? (datos.categorias || []).length;
+    
+  } catch (error) {
+    console.error("Error al cargar categorías:", error);
+    elemento.textContent = "Error";
   }
 }

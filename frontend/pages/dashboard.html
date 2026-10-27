@@ -37,7 +37,7 @@
       <main class="content">
         <h1>Panel principal</h1>
         <p class="subtitle">Resumen general del inventario</p>
-
+        
         <div class="panel">
           <h2>Estado de la conexión</h2>
           <div class="status-line">
@@ -49,23 +49,24 @@
         <div class="stats-grid">
           <div class="stat-card">
             <div class="label">Total productos</div>
-            <div class="value">—</div>
-            <div class="pending-note">Pendiente: conectar a GET /api/productos</div>
+            <div class="value" id="total-productos">—</div>
           </div>
+
           <div class="stat-card">
             <div class="label">Existencias bajas</div>
             <div class="value">—</div>
             <div class="pending-note">Pendiente: conectar a GET /api/inventario</div>
           </div>
+
           <div class="stat-card">
             <div class="label">Movimientos hoy</div>
             <div class="value">—</div>
             <div class="pending-note">Pendiente: conectar a GET /api/movimientos</div>
           </div>
+
           <div class="stat-card">
-            <div class="label">Categorías activas</div>
-            <div class="value">—</div>
-            <div class="pending-note">Pendiente: conectar a GET /api/categorias</div>
+            <div class="label">Total categorías</div>
+            <div class="value" id="total-categorias">—</div>
           </div>
         </div>
 
