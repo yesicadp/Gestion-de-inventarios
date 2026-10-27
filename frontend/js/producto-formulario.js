@@ -4,10 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_CATEGORIAS = "http://127.0.0.1:5000/api/categorias";
 
   const token = localStorage.getItem("token");
-
+  const parametros = new URLSearchParams(window.location.search);
+  const productoId = parametros.get("id");
   const form = document.getElementById("form-producto");
   const mensaje = document.getElementById("mensaje-formulario");
   const botonGuardar = document.getElementById("btn-guardar");
+  const tituloFormulario = document.getElementById("titulo-formulario");
 
   const campos = {
     codigo: document.getElementById("codigo"),
@@ -19,6 +21,50 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   let categoriasCargadas = false;
+
+  
+  // Cargar los datos del producto cuando se está editando.
+  async function cargarProducto() {
+    if (!productoId) {
+      return;
+    }
+
+    tituloFormulario.textContent = "Editar producto";
+    botonGuardar.textContent = "Guardar cambios";
+
+    try {
+      const respuesta = await fetch(`${API_PRODUCTOS}/${productoId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.mensaje || "No se pudo cargar el producto."
+        );
+      }
+
+      const producto = datos.producto;
+
+      campos.codigo.value = producto.codigo;
+      campos.nombre.value = producto.nombre;
+      campos.existencia.value = producto.existencia_actual;
+      campos.minimo.value = producto.existencia_minima;
+      campos.estado.value = Number(producto.estado) === 1
+        ? "activo"
+        : "inactivo";
+
+      // Seleccionar la categoría después de cargar sus opciones.
+      campos.categoria.value = String(producto.categoria_id);
+
+    } catch (error) {
+      console.error("Error al cargar el producto:", error);
+      mostrarMensaje(error.message, true);
+    }
+  }
 
   if (!token) {
     window.location.href = "login.html";
@@ -69,6 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       categoriasCargadas = true;
       campos.categoria.disabled = false;
+
+      await cargarProducto();
 
       if (categorias.length === 0) {
         mostrarMensaje(
@@ -126,8 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarMensaje("Guardando producto...");
 
     try {
-      const respuesta = await fetch(API_PRODUCTOS, {
-        method: "POST",
+      const url = productoId
+        ? `${API_PRODUCTOS}/${productoId}`
+        : API_PRODUCTOS;
+
+      const respuesta = await fetch(url, {
+        method: productoId ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
@@ -161,7 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       mostrarMensaje(
-        datos.mensaje || "Producto registrado correctamente."
+        datos.mensaje ||
+          (productoId
+            ? "Producto actualizado correctamente."
+            : "Producto registrado correctamente.")
       );
 
       form.reset();

@@ -211,3 +211,201 @@ def registrar_producto(datos_usuario):
 
         if conexion is not None:
             conexion.close()
+
+
+@products_bp.get("/api/productos/<int:id_producto>")
+@requiere_token
+def consultar_producto(datos_usuario, id_producto):   
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                p.id_producto,
+                p.nombre,
+                p.codigo,
+                p.categoria_id,
+                c.nombre AS categoria,
+                p.existencia_actual,
+                p.existencia_minima,
+                p.estado
+            FROM productos p
+            INNER JOIN categorias c
+                ON p.categoria_id = c.id_categoria
+            WHERE p.id_producto = %s
+        """, (id_producto,))
+
+        producto = cursor.fetchone()
+
+        if producto is None:
+            return jsonify({
+                "mensaje": "El producto no existe"
+            }), 404
+
+        return jsonify({
+            "mensaje": "Producto consultado correctamente",
+            "producto": producto
+        }), 200
+
+    except Exception:
+        return jsonify({
+            "mensaje": "Error al consultar el producto"
+        }), 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if conexion is not None:
+            conexion.close()
+
+
+@products_bp.put("/api/productos/<int:id_producto>")
+@requiere_token
+def actualizar_producto(datos_usuario, id_producto):    
+    datos = request.get_json(silent=True)
+
+    if not isinstance(datos, dict):
+        return jsonify({
+            "mensaje": "Debes enviar los datos en formato JSON"
+        }), 400
+
+    nombre = datos.get("nombre")
+    codigo = datos.get("codigo")
+    categoria_id = datos.get("categoria_id")
+    existencia_actual = datos.get("existencia_actual")
+    existencia_minima = datos.get("existencia_minima")
+    estado = datos.get("estado")
+
+    if not isinstance(nombre, str) or not nombre.strip():
+        return jsonify({
+            "mensaje": "El nombre del producto es obligatorio"
+        }), 400
+
+    if not isinstance(codigo, str) or not codigo.strip():
+        return jsonify({
+            "mensaje": "El código del producto es obligatorio"
+        }), 400
+
+    try:
+        if any(isinstance(valor, bool) for valor in (
+            categoria_id, existencia_actual, existencia_minima, estado
+        )):
+            raise ValueError
+
+        categoria_id = int(categoria_id)
+        existencia_actual = int(existencia_actual)
+        existencia_minima = int(existencia_minima)
+        estado = int(estado)
+
+    except (ValueError, TypeError):
+        return jsonify({
+            "mensaje": "Categoría y existencias deben ser enteros; el estado debe ser 0 o 1"
+        }), 400
+
+    if categoria_id <= 0:
+        return jsonify({
+            "mensaje": "La categoría debe ser válida"
+        }), 400
+
+    if existencia_actual < 0 or existencia_minima < 0:
+        return jsonify({
+            "mensaje": "Las existencias no pueden ser negativas"
+        }), 400
+
+    if estado not in (0, 1):
+        return jsonify({
+            "mensaje": "El estado debe ser 1 (activo) o 0 (inactivo)"
+        }), 400
+
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT id_producto
+            FROM productos
+            WHERE id_producto = %s
+        """, (id_producto,))
+
+        if cursor.fetchone() is None:
+            return jsonify({
+                "mensaje": "El producto no existe"
+            }), 404
+
+        cursor.execute("""
+            SELECT id_categoria
+            FROM categorias
+            WHERE id_categoria = %s
+        """, (categoria_id,))
+
+        if cursor.fetchone() is None:
+            return jsonify({
+                "mensaje": "La categoría seleccionada no existe"
+            }), 400
+
+        cursor.execute("""
+            SELECT id_producto
+            FROM productos
+            WHERE codigo = %s AND id_producto != %s
+        """, (codigo.strip(), id_producto))
+
+        if cursor.fetchone() is not None:
+            return jsonify({
+                "mensaje": "Ya existe otro producto con ese código"
+            }), 409
+
+        cursor.execute("""
+            UPDATE productos
+            SET nombre = %s,
+                codigo = %s,
+                categoria_id = %s,
+                existencia_actual = %s,
+                existencia_minima = %s,
+                estado = %s
+            WHERE id_producto = %s
+        """, (
+            nombre.strip(),
+            codigo.strip(),
+            categoria_id,
+            existencia_actual,
+            existencia_minima,
+            estado,
+            id_producto
+        ))
+
+        conexion.commit()
+
+        return jsonify({
+            "mensaje": "Producto actualizado correctamente"
+        }), 200
+
+    except IntegrityError:
+        if conexion is not None:
+            conexion.rollback()
+
+        return jsonify({
+            "mensaje": "No se pudo actualizar el producto por una restricción de la base de datos"
+        }), 409
+
+    except Exception:
+        if conexion is not None:
+            conexion.rollback()
+
+        return jsonify({
+            "mensaje": "Error interno al actualizar el producto"
+        }), 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if conexion is not None:
+            conexion.close()

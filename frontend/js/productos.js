@@ -196,10 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
       botonEditar.textContent = "Editar";
 
       botonEditar.addEventListener("click", () => {
-        const codigo = encodeURIComponent(producto.codigo);
-
-        window.location.href =
-          `producto-formulario.html?codigo=${codigo}`;
+        window.location.href = `producto-formulario.html?id=${producto.id}`;
       });
 
       acciones.appendChild(botonEditar);
