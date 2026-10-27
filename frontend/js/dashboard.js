@@ -56,6 +56,7 @@ async function verificarSesionConBackend(token) {
       statusText.textContent = "Conectado al backend — token válido.";
       cargarTotalProductos(token);
       cargarTotalCategorias(token);
+      cargarExistenciasBajas(token);
     } else if (response.status === 401) {
       statusDot.classList.add("error");
       statusText.textContent = "Tu sesión expiró o el token no es válido. Vuelve a iniciar sesión.";
@@ -108,9 +109,32 @@ async function cargarTotalCategorias(token) {
     const datos = await respuesta.json();
 
     elemento.textContent = datos.total ?? (datos.categorias || []).length;
-    
+
   } catch (error) {
     console.error("Error al cargar categorías:", error);
+    elemento.textContent = "Error";
+  }
+}
+
+async function cargarExistenciasBajas(token) {
+  const elemento = document.getElementById("total-existencias-bajas");
+
+  try {
+    const respuesta = await fetch(`${API_BASE}/api/inventario`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudo consultar el inventario.");
+    }
+
+    const datos = await respuesta.json();
+
+    elemento.textContent = datos.total_existencias_bajas ?? 0;
+  } catch (error) {
+    console.error("Error al cargar existencias bajas:", error);
     elemento.textContent = "Error";
   }
 }
