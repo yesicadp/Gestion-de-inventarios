@@ -86,6 +86,40 @@ CREATE TABLE auditoria (
         ON DELETE RESTRICT
 );
 
+
+-- INDICES ADICIONALES
+
+CREATE INDEX idx_usuarios_rol_id
+ON usuarios (rol_id);
+
+CREATE INDEX idx_categorias_padre_id
+ON categorias (categoria_padre_id);
+
+CREATE INDEX idx_productos_estado
+ON productos (estado);
+
+CREATE INDEX idx_productos_categoria_estado
+ON productos (categoria_id, estado);
+
+CREATE INDEX idx_movimientos_usuario_id
+ON movimientos (usuario_id);
+
+CREATE INDEX idx_movimientos_fecha
+ON movimientos (fecha);
+
+CREATE INDEX idx_movimientos_producto_fecha
+ON movimientos (producto_id, fecha);
+
+CREATE INDEX idx_auditoria_modulo
+ON auditoria (modulo);
+
+CREATE INDEX idx_auditoria_fecha
+ON auditoria (fecha);
+
+CREATE INDEX idx_auditoria_usuario_modulo_fecha
+ON auditoria (usuario_id, modulo, fecha);
+
+
 INSERT INTO roles (nombre_rol)
 VALUES
     ('Administrador'),
