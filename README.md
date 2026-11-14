@@ -10,11 +10,11 @@ El desarrollo se organiza mediante la metodología Scrum, utilizando Sprints par
 
 ## Objetivo general
 
-Desarrollar un sistema web de gestión de inventarios que permita administrar de manera organizada y eficiente la información de los productos, sus existencias y sus movimientos.
+Desarrollar un sistema web de gestión de inventarios que permita administrar productos, controlar existencias y registrar los movimientos de inventario de manera organizada y eficiente.
 
 ## Objetivos específicos
 
-- Diseñar una solución web para registrar, consultar y administrar productos.
+- Diseñar una solución web que permita registrar, consultar, actualizar y administrar productos.
 - Implementar funcionalidades para el control de entradas y salidas de inventario.
 - Mantener la información organizada y centralizada.
 - Facilitar la consulta de existencias y el estado de los productos.
@@ -23,46 +23,81 @@ Desarrollar un sistema web de gestión de inventarios que permita administrar de
 
 ## Alcance
 
-El proyecto contempla el análisis, diseño y desarrollo de una aplicación web para la gestión y el control básico de inventarios.
+El sistema contempla la gestión de productos, categorías, usuarios, roles, existencias y movimientos de inventario. También considera el seguimiento de las operaciones mediante el módulo de auditoría.
 
-Los módulos funcionales contemplados son:
-
-- **Autenticación:** control de acceso al sistema.
-- **Usuarios y roles:** administración de usuarios y asignación de roles.
-- **Productos:** registro, consulta, modificación y desactivación.
-- **Categorías:** clasificación de productos mediante categorías y subcategorías.
-- **Inventario:** consulta de existencias disponibles.
-- **Movimientos:** registro e historial de entradas y salidas.
-- **Búsqueda:** localización y filtrado de productos y movimientos.
-- **Auditoría:** seguimiento de las operaciones realizadas en el sistema.
-
-El alcance inicial no contempla facturación electrónica, contabilidad, comercio electrónico ni integraciones con plataformas externas.
-
-## Arquitectura del sistema
-
-El proyecto utiliza una arquitectura monolítica por capas, que organiza las responsabilidades de la aplicación y facilita su mantenimiento.
-
-La estructura contempla:
-
-- **Presentación:** interfaz web con la que interactúa el usuario.
-- **Lógica de negocio:** procesamiento de las operaciones y aplicación de las reglas del inventario.
-- **Acceso a datos:** comunicación con la base de datos.
-- **Base de datos:** almacenamiento persistente de la información mediante MySQL.
+La gestión de proveedores fue contemplada en la descripción inicial del proyecto; sin embargo, actualmente no existe una tabla de proveedores en el esquema implementado de la base de datos.
 
 ## Funcionamiento general
 
 1. El usuario accede al sistema mediante un navegador.
-2. La interfaz presenta las opciones disponibles.
-3. Las solicitudes se procesan en el backend.
-4. La lógica de negocio aplica las reglas correspondientes.
-5. La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
-6. El sistema devuelve los resultados para su visualización en la interfaz.
+2. El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
+3. El frontend envía solicitudes HTTP a la API REST.
+4. La API verifica la autenticación, los permisos y los datos recibidos.
+5. Cada solicitud se dirige al módulo correspondiente.
+6. La capa de negocio aplica las reglas del inventario.
+7. La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
+8. La API devuelve una respuesta en formato JSON y el frontend actualiza la interfaz.
+
+## Módulos del sistema
+
+| Módulo | Responsabilidad principal | Funciones |
+|---|---|---|
+| Autenticación | Controlar el acceso | Inicio y cierre de sesión |
+| Usuarios y permisos | Administrar roles y autorizaciones | Crear usuarios, asignar roles y validar permisos |
+| Productos | Administrar productos | Registrar, consultar, modificar y desactivar |
+| Categorías | Clasificar productos | Crear categorías y subcategorías |
+| Inventario | Consultar existencias | Mostrar cantidades actuales y alertas |
+| Movimientos | Registrar cambios de inventario | Entradas, salidas e historial |
+| Existencias | Actualizar cantidades | Incrementar o disminuir el inventario |
+| Búsqueda | Localizar información | Buscar y filtrar productos y movimientos |
+| Auditoría | Facilitar el seguimiento | Registrar usuario, fecha y operación |
+
+## Estructuración modular inicial
+
+La siguiente estructura representa la organización modular inicial propuesta para el proyecto:
+
+```text
+inventario/
+├── frontend/
+│   ├── pages/
+│   ├── css/
+│   ├── js/
+│   └── assets/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config/
+│   │   ├── database/
+│   │   ├── shared/
+│   │   │   ├── exceptions/
+│   │   │   ├── security/
+│   │   │   └── utilities/
+│   │   └── modules/
+│   │       ├── configuraciones/
+│   │       ├── authentication/
+│   │       ├── users/
+│   │       ├── roles/
+│   │       ├── products/
+│   │       ├── categories/
+│   │       ├── inventory/
+│   │       └── movements/
+│   └── tests/
+│
+├── database/
+│   ├── migrations/
+│   └── scripts/
+│
+└── documentation/
+```
+
+Esta estructura corresponde a una propuesta inicial de organización modular y no necesariamente representa la totalidad de los archivos implementados actualmente.
 
 ## Base de datos
 
-La persistencia de la información se realiza mediante **MySQL**.
+La persistencia de la información del sistema se realiza mediante **MySQL**.
 
-Actualmente, la base de datos `gestion_inventarios` cuenta con las siguientes tablas:
+La base de datos `gestion_inventarios` cuenta actualmente con seis tablas principales:
 
 | Tabla | Responsabilidad |
 |---|---|
@@ -73,9 +108,16 @@ Actualmente, la base de datos `gestion_inventarios` cuenta con las siguientes ta
 | `movimientos` | Registrar las entradas y salidas de inventario. |
 | `auditoria` | Almacenar información relacionada con las operaciones del sistema. |
 
-La estructura incluye claves primarias y foráneas, restricciones de integridad e índices para organizar y proteger la información.
+La estructura contempla:
 
-**Nota sobre auditoría:** la tabla y sus relaciones están creadas, pero la implementación del registro automático de operaciones y su integración con el sistema se encuentran pendientes de verificación.
+- Modelo entidad-relación.
+- Definición de tablas, campos y relaciones.
+- Claves primarias y foráneas.
+- Restricciones de integridad.
+- Índices para consultas.
+- Scripts SQL para creación, pruebas y verificación.
+
+**Nota sobre auditoría:** la tabla y sus relaciones están creadas, pero la implementación del registro automático de operaciones y su integración con el sistema se encuentran pendientes de verificación e implementación.
 
 ## Pruebas de base de datos
 
@@ -91,31 +133,6 @@ En las pruebas del Sprint 3 se verificó:
 
 Los scripts de verificación se encuentran en `database/scripts/`.
 
-## Estructura del repositorio
-
-```text
-Gestion-de-inventarios/
-├── backend/
-├── frontend/
-├── database/
-│   ├── migrations/
-│   ├── scripts/
-│   │   ├── pruebas-sprint-3.sql
-│   │   └── verificacion-sprint-4.sql
-│   ├── schema.sql
-│   └── seed-usuarios-prueba.sql
-├── documentation/
-│   ├── 01-presentacion-proyecto.md
-│   ├── 02-estructura-proyecto.md
-│   ├── 03-logica-proyecto.md
-│   ├── 04-arquitectura.md
-│   ├── 05-modelo-desarrollo.md
-│   ├── 06-historias-usuario.md
-│   ├── 07-avances-proyecto.md
-│   └── diagrama-er.png
-└── README.md
-```
-
 ## Documentación
 
 La documentación técnica y funcional del proyecto se encuentra en la carpeta `documentation/`.
@@ -130,6 +147,7 @@ Incluye:
 - Historias de usuario.
 - Avances por Sprint.
 - Diagrama entidad-relación.
+- Evidencias de las pruebas de base de datos.
 
 ## Estado del proyecto
 
