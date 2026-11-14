@@ -2,81 +2,119 @@
 
 ## Funcionamiento general
 
-El sistema sigue una arquitectura monolítica por capas, en la que el frontend interactúa con el backend y este se comunica con la base de datos MySQL.
+El sistema utiliza una arquitectura monolítica modular por capas, en la que el frontend interactúa con el backend mediante solicitudes HTTP y este se comunica con la base de datos MySQL.
 
 El funcionamiento general contempla los siguientes pasos:
 
 1. El usuario accede al sistema mediante un navegador web.
-2. El frontend presenta las opciones disponibles para interactuar con el inventario.
-3. El frontend envía solicitudes al backend.
+2. El frontend presenta las interfaces disponibles.
+3. El frontend envía solicitudes HTTP a la API REST.
 4. El backend recibe y procesa las solicitudes.
-5. La lógica de negocio aplica las validaciones y reglas correspondientes.
+5. La lógica de negocio realiza las validaciones correspondientes.
 6. La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
-7. El backend devuelve los resultados al frontend para su visualización.
+7. El backend devuelve una respuesta en formato JSON para que el frontend actualice la información presentada.
 
 ## Procesos principales del sistema
 
 ### Autenticación y gestión de usuarios
 
-Este proceso contempla el control de acceso al sistema mediante credenciales de usuario.
+El sistema cuenta con un mecanismo de autenticación mediante credenciales de usuario.
 
-Las funcionalidades previstas incluyen:
+**Funcionalidades implementadas:**
 
-- Inicio y cierre de sesión.
-- Validación de credenciales.
-- Administración de usuarios.
-- Asignación de roles.
-- Control de permisos según el rol del usuario.
+- Inicio de sesión mediante correo y contraseña.
+- Verificación de credenciales.
+- Protección de contraseñas mediante bcrypt.
+- Generación de tokens JWT para identificar al usuario autenticado.
+- Validación de tokens en las rutas protegidas.
+- Consulta del perfil del usuario autenticado.
 
-Los roles definidos en la estructura de la base de datos permiten diferenciar los tipos de usuario del sistema.
+**Funcionalidades pendientes:**
+
+- Cierre de sesión con invalidación del token.
+- Administración de usuarios mediante endpoints.
+- Asignación y modificación de roles desde la API.
+- Control de permisos diferenciados según el rol del usuario.
+
+Los roles definidos en la base de datos permiten establecer la estructura de usuarios del sistema. Sin embargo, la autorización diferenciada por roles todavía no está implementada en el mecanismo de protección de rutas.
 
 ### Gestión de productos
 
-Permite administrar la información de los productos registrados en el inventario.
+Este proceso permite administrar la información de los productos registrados en el inventario.
 
-Las operaciones contempladas son:
+**Operaciones implementadas en el backend:**
 
 - Registrar nuevos productos.
-- Consultar productos existentes.
-- Modificar información de los productos.
-- Desactivar productos.
-- Consultar las existencias actuales y mínimas.
+- Consultar la lista de productos.
+- Consultar un producto por su identificador.
+- Actualizar la información de un producto.
+- Validar la información recibida y evitar códigos duplicados.
 
-Cada producto se encuentra asociado a una categoría.
+La estructura de productos contempla información como código, nombre, categoría, existencias actuales, existencias mínimas y estado.
+
+**Pendiente:** completar y verificar las funcionalidades adicionales de administración, incluyendo la desactivación de productos desde la interfaz.
+
+Cada producto se encuentra asociado a una categoría mediante una relación definida en la base de datos.
 
 ### Clasificación por categorías
 
-Permite organizar los productos mediante categorías y subcategorías.
+Este proceso permite organizar los productos mediante categorías y subcategorías.
 
-La estructura de la base de datos contempla la relación jerárquica entre categorías, facilitando la clasificación y consulta de los productos.
+**Operaciones implementadas en el backend:**
+
+- Consultar categorías.
+- Registrar categorías.
+- Registrar subcategorías mediante la relación con una categoría padre.
+
+La estructura de la base de datos contempla una relación jerárquica entre categorías, permitiendo organizar los productos de acuerdo con su clasificación.
+
+**Pendiente:** implementar y verificar las operaciones de modificación y eliminación de categorías.
 
 ### Consulta de inventario
 
-Permite consultar las cantidades disponibles de los productos.
+Este proceso permite consultar las cantidades disponibles de los productos.
 
 La información contempla:
 
 - Existencia actual.
 - Existencia mínima.
 - Estado del producto.
-- Identificación de productos con existencias inferiores al mínimo establecido.
+- Identificación de productos con stock bajo.
+
+El backend dispone de un endpoint para consultar el inventario y determinar cuáles productos presentan existencias iguales o inferiores al mínimo establecido.
 
 ### Movimientos de inventario
 
-Este proceso contempla el registro de entradas y salidas de productos.
+Este proceso permite registrar entradas y salidas de productos, manteniendo actualizadas las existencias.
 
-El funcionamiento previsto es:
+El funcionamiento implementado en el backend es:
 
 1. Identificar el producto relacionado con el movimiento.
-2. Validar el tipo de movimiento y la cantidad.
-3. Verificar que una salida no supere las existencias disponibles.
-4. Actualizar las existencias del producto.
-5. Registrar el movimiento asociado al usuario.
-6. Conservar la información del movimiento para su consulta posterior.
+2. Validar el tipo de movimiento y la cantidad recibida.
+3. Verificar que la cantidad sea mayor que cero.
+4. Comprobar que una salida no supere las existencias disponibles.
+5. Actualizar las existencias del producto.
+6. Registrar el movimiento asociado al producto y al usuario.
+7. Almacenar la fecha, el motivo y la existencia resultante.
+8. Confirmar la transacción en la base de datos.
 
-La tabla `movimientos` almacena información como el producto, usuario, tipo de movimiento, cantidad, motivo, fecha y existencia resultante.
+El registro de movimientos se realiza mediante transacciones para mantener la coherencia entre la actualización de existencias y el almacenamiento del movimiento.
 
-Se realizaron pruebas manuales mediante SQL para verificar operaciones de entrada y salida utilizando transacciones y rollback.
+La tabla `movimientos` almacena información como:
+
+- Producto relacionado.
+- Usuario responsable.
+- Tipo de movimiento.
+- Cantidad.
+- Motivo.
+- Fecha.
+- Existencia resultante.
+
+El backend dispone de operaciones para registrar movimientos y consultar su historial.
+
+**Pruebas de base de datos:** durante el Sprint 3 se realizaron pruebas manuales mediante SQL para verificar entradas, salidas y reversión de cambios utilizando `ROLLBACK`.
+
+Estas pruebas permitieron comprobar el comportamiento de las operaciones directamente en la base de datos, sin representar una validación completa del flujo desde la interfaz web.
 
 ### Búsqueda y filtrado
 
@@ -91,6 +129,8 @@ Se consideran criterios como:
 - Tipo de movimiento.
 - Fechas de los movimientos.
 
+**Estado actual:** aunque existen consultas para obtener productos y movimientos, no se identificaron endpoints específicos para aplicar todos los filtros descritos. Su implementación y verificación permanecen pendientes.
+
 ### Auditoría
 
 La base de datos cuenta con una tabla `auditoria`, destinada a almacenar información relacionada con las operaciones realizadas en el sistema.
@@ -103,25 +143,33 @@ Su estructura contempla:
 - Fecha.
 - Detalle de la operación.
 
-**Estado actual:** la estructura de auditoría y sus relaciones están creadas y verificadas. Sin embargo, el registro automático de las operaciones y su integración con el backend se encuentran pendientes.
+Durante el Sprint 4 se verificaron la estructura de la tabla, sus relaciones e índices.
+
+**Estado actual:** el registro automático de operaciones y su integración con el backend están pendientes. Tampoco se identificaron endpoints para consultar los registros de auditoría.
 
 ## Reglas de negocio
 
-Las siguientes reglas orientan el funcionamiento esperado del sistema:
+Las siguientes reglas orientan el funcionamiento del sistema y se encuentran respaldadas por validaciones del backend o restricciones de la base de datos, según corresponda:
 
-- Un producto no puede tener existencias negativas.
-- La cantidad de un movimiento debe ser mayor que cero.
-- Una salida no puede superar las existencias disponibles.
-- Los movimientos deben estar asociados a un producto y a un usuario.
-- Los productos pueden organizarse mediante categorías y subcategorías.
-- Las existencias actuales deben mantenerse coherentes con los movimientos registrados.
-- El acceso a las funcionalidades debe depender de los roles y permisos definidos.
-- Las operaciones relevantes deben contar con mecanismos de auditoría.
+| Regla | Implementación |
+|---|---|
+| Un producto no puede tener existencias negativas. | Restricción CHECK en la base de datos. |
+| La cantidad de un movimiento debe ser mayor que cero. | Validación en el backend y restricción CHECK. |
+| Una salida no puede superar las existencias disponibles. | Validación en el backend. |
+| Los movimientos deben estar asociados a un producto y a un usuario. | Relaciones y claves foráneas. |
+| Los productos pueden organizarse mediante categorías y subcategorías. | Relación entre categorías y productos. |
+| Las existencias deben mantenerse coherentes con los movimientos registrados. | Actualización transaccional en el backend. |
+| El acceso a las funcionalidades debe depender de los roles y permisos definidos. | Pendiente de implementación completa. |
+| Las operaciones relevantes deben contar con mecanismos de auditoría. | Estructura creada; registro automático pendiente. |
 
 ## Consideraciones de implementación
 
-La estructura de la base de datos incorpora restricciones de integridad para proteger la información, incluyendo validaciones sobre existencias y cantidades de movimientos.
+La base de datos incorpora restricciones de integridad para proteger la información y evitar registros inconsistentes, incluyendo validaciones sobre existencias y cantidades de movimientos.
 
-Las pruebas realizadas en el Sprint 3 permitieron verificar manualmente operaciones de entrada y salida mediante SQL. Estas pruebas no representan una validación completa de los procesos desde la interfaz de la aplicación.
+El backend implementa operaciones para la autenticación, gestión de productos, categorías, consulta de inventario y movimientos.
 
-La integración automática de auditoría y la verificación de los procesos funcionales restantes continúan pendientes.
+Las pruebas realizadas durante el Sprint 3 permitieron verificar manualmente operaciones de entrada y salida mediante SQL. Durante el Sprint 4 se revisó la estructura de auditoría y los índices de la base de datos.
+
+La implementación de permisos diferenciados por roles, la integración automática de auditoría, los filtros específicos y la verificación de los procesos funcionales restantes continúan pendientes.
+
+Para consultar el detalle de las rutas disponibles y su estado de implementación, revisar `04-arquitectura.md`.
