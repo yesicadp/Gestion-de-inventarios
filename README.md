@@ -1,5 +1,6 @@
 # Sistema de Gestión de Inventarios
-Descripción general:
+
+## Descripción general
 
 El proyecto consiste en el desarrollo de un sistema web para la gestión y control de inventarios, diseñado para facilitar la administración de productos y mantener la información del inventario organizada, actualizada y disponible de manera centralizada.
 
@@ -12,6 +13,7 @@ El proyecto será desarrollado aplicando la metodología Scrum, permitiendo orga
 Desarrollar un sistema web de gestión de inventarios que permita administrar de manera organizada y eficiente la información relacionada con los productos, sus existencias y los movimientos de inventario, facilitando el control y seguimiento de los recursos disponibles.
 
 ## Objetivos específicos
+
 - Diseñar una solución web que permita registrar, consultar, actualizar y administrar productos.
 - Implementar funcionalidades para el control de entradas y salidas de inventario.
 - Mantener la información del inventario organizada y centralizada.
@@ -44,29 +46,35 @@ El proyecto no contempla, dentro de su alcance inicial, funcionalidades relacion
 El desarrollo se realizará bajo la metodología Scrum, mediante ciclos incrementales denominados Sprints. En cada Sprint se priorizarán, diseñarán, desarrollarán y validarán determinadas funcionalidades, permitiendo obtener incrementos funcionales del producto y realizar ajustes de acuerdo con los resultados de las revisiones y las necesidades identificadas durante el desarrollo.
 
 ## Funcionamiento general
-El usuario accede al sistema mediante un navegador.
-El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
-El frontend envía solicitudes HTTP a la API REST.
-La API verifica la autenticación, los permisos y los datos recibidos.
-Cada solicitud se dirige al módulo correspondiente.
-La capa de negocio aplica las reglas del inventario.
-La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
-La API devuelve una respuesta en formato JSON y el frontend actualiza la interfaz.
 
+1. El usuario accede al sistema mediante un navegador.
+2. El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
+3. El frontend envía solicitudes HTTP a la API REST.
+4. La API verifica la autenticación, los permisos y los datos recibidos.
+5. Cada solicitud se dirige al módulo correspondiente.
+6. La capa de negocio aplica las reglas del inventario.
+7. La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
+8. La API devuelve una respuesta en formato JSON y el frontend actualiza la interfaz.
 
-Módulo	                Responsabilidad principal	                Funciones
-Autenticación	          Controlar el acceso	                      Inicio y cierre de sesión
-Usuarios y permisos	    Administrar roles y autorizaciones	      Crear usuarios, asignar roles y validar permisos
-Productos	              Administrar productos	                    Registrar, consultar, modificar y desactivar
-Categorías	            Clasificar productos	                    Crear categorías y subcategorías
-Inventario	            Consultar existencias	                    Mostrar cantidades actuales y alertas
-Movimientos	            Registrar cambios de inventario	          Entradas, salidas e historial
-Existencias	            Actualizar cantidades	                    Incrementar o disminuir el inventario
-Búsqueda	              Localizar información	                    Buscar y filtrar productos y movimientos
-Auditoría	              Facilitar el seguimiento	                Registrar usuario, fecha y operación
+## Módulos del sistema
 
-## estructuracion modular inicial 
+| Módulo | Responsabilidad principal | Funciones |
+|---|---|---|
+| Autenticación | Controlar el acceso | Inicio y cierre de sesión |
+| Usuarios y permisos | Administrar roles y autorizaciones | Crear usuarios, asignar roles y validar permisos |
+| Productos | Administrar productos | Registrar, consultar, modificar y desactivar |
+| Categorías | Clasificar productos | Crear categorías y subcategorías |
+| Inventario | Consultar existencias | Mostrar cantidades actuales y alertas |
+| Movimientos | Registrar cambios de inventario | Entradas, salidas e historial |
+| Existencias | Actualizar cantidades | Incrementar o disminuir el inventario |
+| Búsqueda | Localizar información | Buscar y filtrar productos y movimientos |
+| Auditoría | Facilitar el seguimiento | Registrar usuario, fecha y operación |
 
+## Estructuración modular inicial
+
+La siguiente estructura representa la organización modular inicial propuesta para el proyecto:
+
+```text
 inventario/
 ├── frontend/
 │   ├── pages/
@@ -99,30 +107,36 @@ inventario/
 │   └── scripts/
 │
 └── documentation/
-
+```
 
 ## Base de datos
 
-La persistencia de la información del sistema se realizará mediante **MySQL**.
+La persistencia de la información del sistema se realiza mediante **MySQL**.
 
-La estructura inicial de la base de datos contempla las siguientes entidades principales:
+La estructura actual de la base de datos contempla las siguientes entidades principales:
 
-* **Usuarios:** gestión de las cuentas y acceso de los usuarios.
-* **Roles:** definición de los roles y permisos de acceso.
-* **Productos:** información y estado de los productos registrados.
-* **Categorías:** clasificación de los productos, incluyendo categorías y subcategorías.
-* **Proveedores:** información asociada a los proveedores de los productos.
-* **Movimientos:** registro de las entradas y salidas de inventario.
+- **Usuarios:** gestión de las cuentas y acceso de los usuarios.
+- **Roles:** definición de los roles y permisos de acceso.
+- **Productos:** información y estado de los productos registrados.
+- **Categorías:** clasificación de los productos, incluyendo categorías y subcategorías.
+- **Movimientos:** registro de las entradas y salidas de inventario.
+- **Auditoría:** almacenamiento de información relacionada con el usuario, módulo, acción, fecha y detalle de las operaciones.
 
-La base de datos permitirá mantener centralizada la información del inventario y conservar el historial de los movimientos realizados.
+**Nota sobre proveedores:** la gestión de proveedores fue contemplada en la descripción inicial del proyecto; sin embargo, actualmente no existe una tabla de proveedores en el esquema implementado de la base de datos.
 
-## Estado actual
+La base de datos permite mantener centralizada la información del inventario y conservar el historial de los movimientos realizados.
 
-La estructura detallada de la base de datos se encuentra en proceso de definición. Posteriormente se incorporarán:
+### Estado actual de la base de datos
 
-* Modelo entidad-relación.
-* Definición de tablas, campos y relaciones.
-* Claves primarias y foráneas.
-* Restricciones e índices.
-* Script SQL para la creación de la base de datos.
-* Procedimientos almacenados, en caso de ser necesarios.
+La estructura de la base de datos se encuentra implementada y documentada. Actualmente contempla:
+
+- Modelo entidad-relación.
+- Definición de tablas, campos y relaciones.
+- Claves primarias y foráneas.
+- Restricciones de integridad e índices.
+- Script SQL para la creación de la base de datos.
+- Scripts SQL para pruebas y verificación.
+
+Se cuenta con seis tablas principales: `roles`, `usuarios`, `categorias`, `productos`, `movimientos` y `auditoria`.
+
+El registro automático de acciones en la tabla de auditoría y su integración con las operaciones del sistema se encuentran pendientes de verificación e implementación.
