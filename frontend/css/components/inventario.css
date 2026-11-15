@@ -1,0 +1,131 @@
+
+.inventory-panel {
+  padding: 20px;
+}
+
+.inventory-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.inventory-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--bg-color);
+}
+
+.inventory-summary-card span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.inventory-summary-card strong {
+  color: var(--text-color);
+  font-size: 24px;
+}
+
+.inventory-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) minmax(160px, 1fr)
+    minmax(160px, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.inventory-toolbar input,
+.inventory-toolbar select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 13px;
+}
+
+.inventory-toolbar input:focus,
+.inventory-toolbar select:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 1px;
+}
+
+.inventory-message {
+  margin-bottom: 14px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.inventory-table th,
+.inventory-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.inventory-table th {
+  background: var(--bg-color);
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inventory-table td {
+  color: var(--text-color);
+}
+
+.inventory-status {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inventory-status.low {
+  background: #fde9e7;
+  color: #b83227;
+}
+
+.inventory-status.normal {
+  background: #e5f7ec;
+  color: #217a43;
+}
+
+.inventory-footer {
+  padding-top: 18px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 1050px) {
+  .inventory-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .inventory-summary,
+  .inventory-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
