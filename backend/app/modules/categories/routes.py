@@ -20,7 +20,7 @@ def listar_categorias(datos_usuario):
         cursor.execute("""
             SELECT id_categoria, nombre, categoria_padre_id
             FROM categorias
-            ORDER BY nombre
+            ORDER BY id_categoria DESC
         """)
         categorias = cursor.fetchall()
 
@@ -129,3 +129,81 @@ def registrar_categoria(datos_usuario):
         if conexion is not None and conexion.is_connected():
             conexion.close()
 
+
+@categories_bp.delete("/api/categorias/<int:id_categoria>")
+@requiere_admin
+def eliminar_categoria(datos_usuario, id_categoria):
+    conexion = None
+    cursor = None
+
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        # Verificar que la categoría exista
+        cursor.execute(
+            "SELECT id_categoria, nombre FROM categorias WHERE id_categoria = %s",
+            (id_categoria,)
+        )
+        categoria = cursor.fetchone()
+
+        if categoria is None:
+            return jsonify({
+                "mensaje": "La categoría no existe"
+            }), 404
+
+        # Verificar si tiene productos asociados
+        cursor.execute(
+            "SELECT id_producto FROM productos WHERE categoria_id = %s LIMIT 1",
+            (id_categoria,)
+        )
+
+        if cursor.fetchone() is not None:
+            return jsonify({
+                "mensaje": "No se puede eliminar la categoría porque tiene productos asociados"
+            }), 409
+
+        # Verificar si tiene subcategorías
+        cursor.execute(
+            "SELECT id_categoria FROM categorias WHERE categoria_padre_id = %s LIMIT 1",
+            (id_categoria,)
+        )
+
+        if cursor.fetchone() is not None:
+            return jsonify({
+                "mensaje": "No se puede eliminar la categoría porque tiene subcategorías asociadas"
+            }), 409
+
+        # Eliminar categoría
+        cursor.execute(
+            "DELETE FROM categorias WHERE id_categoria = %s",
+            (id_categoria,)
+        )
+
+        registrar_auditoria(
+            cursor,
+            datos_usuario.get("usuario_id"),
+            "categorias",
+            "ELIMINAR",
+            f"Categoría {id_categoria}: {categoria['nombre']}"
+        )
+
+        conexion.commit()
+
+        return jsonify({
+            "mensaje": "Categoría eliminada correctamente"
+        }), 200
+
+    except Exception:
+        if conexion is not None and conexion.is_connected():
+            conexion.rollback()
+
+        return jsonify({
+            "mensaje": "No fue posible eliminar la categoría"
+        }), 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None and conexion.is_connected():
+            conexion.close()

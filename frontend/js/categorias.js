@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let categorias = [];
 
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const rol = usuario.rol || usuario.nombre_rol || "";
+  const esAdministrador = rol.toLowerCase() === "administrador";
+
   if (!token) {
     window.location.href = "login.html";
     return;
@@ -123,13 +127,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
         celdaPadre.textContent = padre ? padre.nombre : "—";
 
-        fila.append(celdaId, celdaNombre, celdaPadre);
+        const celdaAcciones = document.createElement("td");
+
+        if (esAdministrador) {
+          const botonEliminar = document.createElement("button");
+
+          botonEliminar.type = "button";
+          botonEliminar.textContent = "Eliminar";
+          botonEliminar.classList.add("btn-secondary");
+
+          botonEliminar.addEventListener("click", () => {
+            eliminarCategoria(categoria.id_categoria, categoria.nombre);
+          });
+
+          celdaAcciones.appendChild(botonEliminar);
+        }
+
+        fila.append(celdaId, celdaNombre, celdaPadre, celdaAcciones);
         tabla.appendChild(fila);
       });
     }
 
     contador.textContent =
       `${filtradas.length} ${filtradas.length === 1 ? "categoría" : "categorías"}`;
+  }
+
+  // Eliminar una categoría.
+  async function eliminarCategoria(id, nombre) {
+    const confirmar = confirm(
+      `¿Estás segura de que deseas eliminar la categoría "${nombre}"?`
+    );
+
+    if (!confirmar) {
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`${API_CATEGORIAS}/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const datos = await respuesta.json();
+
+      if (respuesta.status === 401 || respuesta.status === 403) {
+        mensaje.textContent = "No tienes autorización para eliminar categorías.";
+        return;
+      }
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.mensaje || "No se pudo eliminar la categoría."
+        );
+      }
+
+      mensaje.textContent = datos.mensaje;
+
+      await consultarCategorias();
+
+    } catch (error) {
+      console.error("Error al eliminar categoría:", error);
+      mensaje.textContent = error.message;
+    }
   }
 
   // Mostrar el formulario para registrar una categoría.
