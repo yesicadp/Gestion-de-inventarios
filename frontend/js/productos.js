@@ -190,6 +190,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const acciones = document.createElement("td");
       const botonEditar = document.createElement("button");
+      botonEditar.setAttribute("data-solo-admin", "");
+
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+      const rol = usuario.rol || usuario.nombre_rol || "";
+
+      if (rol.toLowerCase() !== "administrador") {
+          botonEditar.classList.add("hidden");
+      }
 
       botonEditar.type = "button";
       botonEditar.className = "product-action";
