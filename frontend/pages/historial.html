@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial - Gestión de Inventarios</title>
+
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/dashboard.css">
+  <link rel="stylesheet" href="../css/components/productos.css">
+  <link rel="stylesheet" href="../css/components/historial.css">
+</head>
+<body class="app-body">
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Gestión de Inventarios</div>
+      <nav>
+        <a href="dashboard.html">Panel principal</a>
+        <a href="productos.html">Productos</a>
+        <a href="categorias.html">Categorías</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="movimiento-form.html">Movimientos</a>
+        <a href="historial.html" class="active">Historial</a>
+        <a href="usuarios.html" data-solo-admin>Usuarios</a>
+        <a href="auditoria.html" data-solo-admin>Auditoría</a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="user-info">
+          <span>Hola, <strong id="user-name">—</strong></span>
+          <span class="role-badge" id="user-role">—</span>
+        </div>
+        <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
+      </header>
+
+      <main class="content">
+        <h1>Historial de movimientos</h1>
+        <p class="subtitle">
+          Consulta las entradas y salidas registradas en el inventario.
+        </p>
+
+        <section class="panel history-panel">
+
+          <div class="history-toolbar">
+            <input
+              type="search"
+              id="buscar-historial"
+              placeholder="Buscar por producto o código"
+              aria-label="Buscar movimientos"
+            >
+
+            <select id="filtro-tipo" aria-label="Filtrar por tipo">
+              <option value="">Todos los movimientos</option>
+              <option value="ENTRADA">Entradas</option>
+              <option value="SALIDA">Salidas</option>
+            </select>
+
+            <div class="history-date-filter">
+              <label for="fecha-desde">Desde</label>
+              <input type="date" id="fecha-desde">
+            </div>
+
+            <div class="history-date-filter">
+              <label for="fecha-hasta">Hasta</label>
+              <input type="date" id="fecha-hasta">
+            </div>
+
+            <button type="button" id="btn-limpiar-filtros" class="btn-secondary">
+              Limpiar filtros
+            </button>
+          </div>
+
+          <p id="mensaje-historial" class="products-message" role="status">
+            Cargando historial...
+          </p>
+
+          <div class="table-container">
+            <table class="products-table history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Fecha</th>
+                  <th>Producto</th>
+                  <th>Tipo</th>
+                  <th>Cantidad</th>
+                  <th>Existencia resultante</th>
+                  <th>Usuario</th>
+                  <th>Motivo</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-historial"></tbody>
+            </table>
+          </div>
+
+          <div class="products-footer">
+            <span id="contador-historial">0 movimientos</span>
+
+            <div class="pagination">
+              <button type="button" id="pagina-anterior" disabled>
+                Anterior
+              </button>
+              <span id="pagina-actual">Página 1</span>
+              <button type="button" id="pagina-siguiente" disabled>
+                Siguiente
+              </button>
+            </div>
+          </div>
+
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/sesion.js"></script>
+  <script src="../js/historial.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+
+/* ========================================
+   MÓDULO DE HISTORIAL
+======================================== */
+
+.history-panel {
+  width: 100%;
+}
+
+.history-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.history-toolbar input,
+.history-toolbar select {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #dcdfe4);
+  border-radius: 8px;
+  background: var(--card-background, #ffffff);
+  color: var(--text-color, #333333);
+  font: inherit;
+  font-size: 14px;
+}
+
+.history-toolbar input:focus,
+.history-toolbar select:focus {
+  outline: none;
+  border-color: var(--primary-color, #8f1239);
+}
+
+.history-toolbar input[type="search"] {
+  flex: 1 1 220px;
+}
+
+.history-toolbar select {
+  flex: 1 1 170px;
+}
+
+.history-date-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-date-filter label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color, #333333);
+}
+
+.history-table {
+  min-width: 950px;
+}
+
+.history-type {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.history-type.entry {
+  color: #176b3a;
+  background: #e1f4e8;
+}
+
+.history-type.exit {
+  color: #a12b35;
+  background: #fde8e8;
+}
+
+.history-toolbar button {
+  min-height: 42px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 700px) {
+  .history-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-toolbar input,
+  .history-toolbar select,
+  .history-toolbar button {
+    width: 100%;
+  }
+
+  .history-date-filter {
+    width: 100%;
+  }
+}
