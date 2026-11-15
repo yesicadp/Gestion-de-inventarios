@@ -57,6 +57,39 @@ Este archivo documenta las decisiones técnicas del backend, el motivo de cada d
 - Alternativas consideradas: Mantener toda la lógica de autenticación en `main.py`.
 - Consecuencias: El proyecto queda más organizado y permite reutilizar el decorador `requiere_token` en diferentes rutas.
 
+## DEC-007: Auditoría automática desde la aplicación
+
+- Fecha: 2026-11-14
+- Estado: Propuesta
+- Decisión: Cada ruta que crea, edita, desactiva o mueve existencias llama a `registrar_auditoria` con el mismo cursor, antes del commit. No se usan triggers.
+- ¿Por qué?: La base de datos no conoce el usuario autenticado (viene del token JWT) y los triggers no existen en el esquema actual. Guardar la auditoría en la misma transacción garantiza que acción y registro se guarden juntos o ninguno.
+- ¿Para qué?: Cumplir HU-18 y HU-19 sin depender de que alguien registre las acciones manualmente.
+- Consecuencias: Quien modifique la base de datos directamente por SQL no genera auditoría. Las nuevas rutas de escritura deben llamar a `registrar_auditoria`.
+
+## DEC-008: Permisos por rol validados en el backend
+
+- Fecha: 2026-11-14
+- Estado: Propuesta
+- Decisión: El decorador `requiere_admin` (`shared/security/permisos.py`) reutiliza `requiere_token` y exige el rol Administrador para crear y editar productos, crear categorías y consultar la auditoría. Consultar, buscar y registrar movimientos queda para cualquier usuario autenticado.
+- ¿Por qué?: Ocultar botones en el frontend no protege la API.
+- Consecuencias: Un usuario normal recibe 403. El frontend actual muestra "Tu sesión no está autorizada" ante 401 y 403.
+
+## DEC-009: Ampliar las rutas sin cambiar el formato JSON existente
+
+- Fecha: 2026-11-14
+- Estado: Propuesta
+- Decisión: Se conservan las claves que el frontend ya lee (`mensaje`, `total`, `productos`, `categorias`, `total_existencias_bajas`, `existencia_actual`...). Los filtros, la paginación y los campos nuevos son opcionales o se agregan sin quitar nada.
+- ¿Por qué?: El dashboard, el listado y el formulario de productos ya consumen esos nombres.
+- Consecuencias: Las fechas de movimientos y auditoría se devuelven en ISO 8601 (jsonify las convertía a formato HTTP/GMT, lo que desplazaba la hora en el navegador).
+
+## DEC-010: Regla de existencia baja
+
+- Fecha: 2026-11-14
+- Estado: Propuesta
+- Decisión: Un producto activo tiene existencia baja cuando `existencia_actual <= existencia_minima`.
+- ¿Por qué?: Es el criterio que ya usaba `GET /api/inventario` y el dashboard. La HU-12 dice "por debajo del mínimo", que sería `<`.
+- Consecuencias: Si el equipo prefiere `<`, hay que cambiar `EXISTENCIA_BAJA_SQL` en `inventory/routes.py`.
+
 ## Plantilla para nuevas decisiones
 
 ## DEC-XXX: Título de la decisión

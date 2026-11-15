@@ -6,6 +6,8 @@ from app.modules.products.routes import products_bp
 from app.modules.categories.routes import categories_bp
 from app.modules.inventory.routes import inventory_bp
 from app.modules.movements.routes import movements_bp
+from app.modules.audit.routes import audit_bp
+from app.shared.exceptions.errores import registrar_manejadores
 
 app = Flask(__name__)
 CORS(app)
@@ -14,6 +16,8 @@ app.register_blueprint(products_bp)
 app.register_blueprint(categories_bp)
 app.register_blueprint(inventory_bp)
 app.register_blueprint(movements_bp)
+app.register_blueprint(audit_bp)
+registrar_manejadores(app)
 
 @app.get("/")
 def inicio():

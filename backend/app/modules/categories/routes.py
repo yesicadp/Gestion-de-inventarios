@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 
 from app.database.connection import obtener_conexion
 from app.modules.authentication.decorators import requiere_token
+from app.shared.security.permisos import requiere_admin
+from app.shared.utilities.auditoria import registrar_auditoria
 
 categories_bp = Blueprint("categories", __name__)
 
@@ -41,7 +43,7 @@ def listar_categorias(datos_usuario):
 
 
 @categories_bp.post("/api/categorias")
-@requiere_token
+@requiere_admin
 def registrar_categoria(datos_usuario):
     datos = request.get_json(silent=True)
 
@@ -93,8 +95,17 @@ def registrar_categoria(datos_usuario):
             VALUES (%s, %s)
         """, (nombre, categoria_padre_id))
 
-        conexion.commit()
         nuevo_id = cursor.lastrowid
+
+        registrar_auditoria(
+            cursor,
+            datos_usuario.get("usuario_id"),
+            "categorias",
+            "CREAR",
+            f"Categoría {nuevo_id}: {nombre}"
+        )
+
+        conexion.commit()
 
         return jsonify({
             "mensaje": "Categoría registrada correctamente",

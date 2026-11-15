@@ -1,0 +1,309 @@
+# Pruebas manuales de la API con la extensión "REST Client" (humao.rest-client) de VS Code.
+# Uso: pulsa "Send Request" sobre cada bloque, EN ORDEN (de arriba hacia abajo). Compara el código de estado
+# con el número del título (-> 201). Los errores esperados (400, 401, 403, 404, 409) son buena señal.
+# Requisitos: API en http://127.0.0.1:5000, schema.sql + seed-usuarios-prueba.sql y una base SIN productos
+# ni categorías (los ids 1 y 2 se asumen). El token dura 30 min: si ves 401 "expirado", reenvía 02 y 03.
+#
+# Para repetir la prueba desde cero (en MySQL Workbench):
+#   USE gestion_inventarios; SET FOREIGN_KEY_CHECKS = 0;
+#   TRUNCATE auditoria; TRUNCATE movimientos; TRUNCATE productos; TRUNCATE categorias;
+#   SET FOREIGN_KEY_CHECKS = 1;
+
+@base = http://127.0.0.1:5000
+
+###################### ACCESO ######################
+
+### 01 Salud de la API -> 200
+GET {{base}}/api/health
+
+### 02 Login ADMIN -> 200 con "token"
+# @name loginAdmin
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{"username": "admin@inventario.com", "password": "Admin123!"}
+
+### 03 Login USUARIO normal -> 200 con "token"
+# @name loginUsuario
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{"username": "usuario@inventario.com", "password": "Usuario123!"}
+
+### 04 Ruta protegida sin token -> 401
+GET {{base}}/api/productos
+
+###################### CATEGORÍAS ######################
+
+### 05 Crear categoría (admin) -> 201, id 1
+POST {{base}}/api/categorias
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "Periféricos"}
+
+### 06 Crear categoría siendo usuario normal -> 403
+POST {{base}}/api/categorias
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "No debería poder"}
+
+### 07 Categoría repetida -> 409
+POST {{base}}/api/categorias
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "periféricos"}
+
+### 08 Subcategoría hija de la 1 -> 201, id 2
+POST {{base}}/api/categorias
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "Teclados", "categoria_padre_id": 1}
+
+### 09 Listar categorías (usuario) -> 200, total 2
+GET {{base}}/api/categorias
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+###################### PRODUCTOS ######################
+
+### 10 Crear producto con datos incompletos -> 400
+POST {{base}}/api/productos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"codigo": "", "categoria_id": 2}
+
+### 11 Crear producto (existencia 10, mínimo 5) -> 201, id 1
+POST {{base}}/api/productos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"codigo": "PROD-001", "nombre": "Teclado USB", "categoria_id": 2, "existencia_actual": 10, "existencia_minima": 5}
+
+### 12 Código duplicado -> 409
+POST {{base}}/api/productos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"codigo": "PROD-001", "nombre": "Otro", "categoria_id": 2}
+
+### 13 Crear producto siendo usuario normal -> 403
+POST {{base}}/api/productos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"codigo": "PROD-X", "nombre": "No debería poder", "categoria_id": 2}
+
+### 14 Segundo producto, ya con existencia baja (3 de mínimo 5) -> 201, id 2
+POST {{base}}/api/productos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"codigo": "PROD-002", "nombre": "Mouse", "categoria_id": 1, "existencia_actual": 3, "existencia_minima": 5}
+
+### 15 Consultar un producto -> 200
+GET {{base}}/api/productos/1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 16 Producto inexistente -> 404
+GET {{base}}/api/productos/999
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 17 Editar producto (admin) -> 200
+PUT {{base}}/api/productos/1
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "Teclado USB 2.0", "codigo": "PROD-001", "categoria_id": 2, "existencia_actual": 10, "existencia_minima": 5, "estado": 1}
+
+### 18 Editar producto siendo usuario normal -> 403
+PUT {{base}}/api/productos/1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "x", "codigo": "PROD-001", "categoria_id": 2, "existencia_actual": 10, "existencia_minima": 5, "estado": 1}
+
+###################### BÚSQUEDA Y FILTROS DE PRODUCTOS ######################
+
+### 19 Buscar por nombre -> 200, solo "Teclado USB 2.0"
+GET {{base}}/api/productos?q=teclado
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 20 Buscar por código -> 200, solo PROD-002
+GET {{base}}/api/productos?q=PROD-002
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 21 Filtrar por categoría 1 (incluye su subcategoría) -> 200, 2 productos
+GET {{base}}/api/productos?categoria_id=1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 22 Filtrar por la subcategoría 2 -> 200, solo el teclado
+GET {{base}}/api/productos?categoria_id=2
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 23 Filtros combinados: categoría + estado + texto -> 200
+GET {{base}}/api/productos?categoria_id=1&estado=activo&q=mouse
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 24 Parámetro inválido -> 400
+GET {{base}}/api/productos?estado=raro
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+###################### INVENTARIO ######################
+
+### 25 Inventario completo -> 200, total 2, total_existencias_bajas 1
+GET {{base}}/api/inventario
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 26 Solo existencias bajas -> 200, solo el Mouse
+GET {{base}}/api/inventario?existencia_baja=1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 27 Inventario filtrado por texto y categoría -> 200
+GET {{base}}/api/inventario?q=teclado&categoria_id=1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+###################### MOVIMIENTOS ######################
+
+### 28 Salida de 3 (usuario) -> 201, existencia_resultante 7
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "SALIDA", "cantidad": 3, "motivo": "Venta"}
+
+### 29 Salida de 2 -> 201, existencia 5 y existencia_baja 1 (igual al mínimo)
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "salida", "cantidad": 2, "motivo": "Venta"}
+
+### 30 Salida mayor a la existencia -> 400 "No hay existencias suficientes"
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "SALIDA", "cantidad": 999, "motivo": "Prueba"}
+
+### 31 Cantidad inválida -> 400
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "SALIDA", "cantidad": 0, "motivo": "Prueba"}
+
+### 32 Sin motivo -> 400
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "ENTRADA", "cantidad": 1, "motivo": ""}
+
+### 33 Tipo inválido -> 400
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "AJUSTE", "cantidad": 1, "motivo": "Prueba"}
+
+### 34 Producto inexistente -> 404
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 9999, "tipo_movimiento": "ENTRADA", "cantidad": 1, "motivo": "Prueba"}
+
+### 35 Entrada de 10 (admin) -> 201, existencia_resultante 15
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "ENTRADA", "cantidad": 10, "motivo": "Compra a proveedor"}
+
+### 36 El inventario refleja los cambios -> 200, existencia_actual 15 en el teclado
+GET {{base}}/api/inventario?q=teclado
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+###################### HISTORIAL ######################
+
+### 37 Historial completo -> 200, 3 movimientos, el más reciente primero, con "usuario"
+GET {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 38 Por producto -> 200
+GET {{base}}/api/movimientos?producto_id=1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 39 Solo salidas -> 200, 2 movimientos
+GET {{base}}/api/movimientos?tipo=SALIDA
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 40 Por usuario que lo registró (1 = admin) -> 200, 1 movimiento
+GET {{base}}/api/movimientos?usuario_id=1
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 41 Por rango de fechas -> 200
+GET {{base}}/api/movimientos?desde=2026-01-01&hasta=2099-12-31
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 42 Búsqueda por producto + paginación -> 200, total_paginas 2
+GET {{base}}/api/movimientos?q=teclado&pagina=1&por_pagina=2
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 43 Filtro inválido -> 400
+GET {{base}}/api/movimientos?desde=ayer
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+###################### AUDITORÍA (solo admin) ######################
+
+### 44 Consultar auditoría (admin) -> 200, categorías, productos y movimientos creados
+GET {{base}}/api/auditoria
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### 45 Consultar auditoría siendo usuario normal -> 403
+GET {{base}}/api/auditoria
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 46 Solo movimientos -> 200
+GET {{base}}/api/auditoria?modulo=movimientos
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### 47 Solo ediciones de productos -> 200, ver el detalle del cambio
+GET {{base}}/api/auditoria?modulo=productos&accion=EDITAR
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### 48 Acciones de un usuario + paginación -> 200
+GET {{base}}/api/auditoria?usuario_id=2&por_pagina=2&pagina=1
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+###################### DESACTIVAR ######################
+
+### 49 Desactivar producto (admin) -> 200  (existencia_actual debe ser la real: 15)
+PUT {{base}}/api/productos/1
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{"nombre": "Teclado USB 2.0", "codigo": "PROD-001", "categoria_id": 2, "existencia_actual": 15, "existencia_minima": 5, "estado": 0}
+
+### 50 Movimiento sobre producto inactivo -> 409
+POST {{base}}/api/movimientos
+Authorization: Bearer {{loginUsuario.response.body.token}}
+Content-Type: application/json
+
+{"producto_id": 1, "tipo_movimiento": "ENTRADA", "cantidad": 1, "motivo": "Prueba"}
+
+### 51 Solo productos inactivos -> 200, 1 producto
+GET {{base}}/api/productos?estado=inactivo
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 52 El inventario ya no lo muestra -> 200, total 1
+GET {{base}}/api/inventario
+Authorization: Bearer {{loginUsuario.response.body.token}}
+
+### 53 La auditoría registró la desactivación -> 200
+GET {{base}}/api/auditoria?accion=DESACTIVAR
+Authorization: Bearer {{loginAdmin.response.body.token}}
