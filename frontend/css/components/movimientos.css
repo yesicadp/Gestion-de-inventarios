@@ -1,0 +1,112 @@
+
+/* ========================================
+   MÓDULO DE MOVIMIENTOS
+======================================== */
+
+.movement-panel {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.movement-panel h2,
+.products-panel h2 {
+  margin-bottom: 24px;
+  color: var(--text-color);
+}
+
+.movement-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.movement-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.movement-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.movement-field input,
+.movement-field select,
+.movement-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color, #dcdfe4);
+  border-radius: 8px;
+  background-color: var(--card-background, #ffffff);
+  color: var(--text-color, #333333);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movement-field input:focus,
+.movement-field select:focus,
+.movement-field textarea:focus {
+  border-color: var(--primary-color, #8f1239);
+  box-shadow: 0 0 0 3px rgba(143, 18, 57, 0.10);
+}
+
+.movement-field input[readonly] {
+  background-color: var(--background-color, #f5f5f5);
+  cursor: default;
+}
+
+.movement-field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.movement-field-full {
+  grid-column: 1 / -1;
+}
+
+.movement-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.movement-actions button {
+  min-width: 170px;
+}
+
+.movement-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.movement-message {
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 650px) {
+  .movement-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .movement-field-full {
+    grid-column: auto;
+  }
+
+  .movement-actions {
+    flex-direction: column;
+  }
+
+  .movement-actions button {
+    width: 100%;
+  }
+}
