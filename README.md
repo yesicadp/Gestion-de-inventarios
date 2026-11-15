@@ -2,73 +2,59 @@
 
 ## Descripción general
 
-El proyecto consiste en el desarrollo de un sistema web para la gestión y control de inventarios, diseñado para facilitar la administración de productos y mantener la información del inventario organizada, actualizada y disponible de manera centralizada.
+El proyecto consiste en el desarrollo de un sistema web para la gestión y el control de inventarios, diseñado para facilitar la administración de productos y mantener la información organizada, actualizada y disponible de manera centralizada.
 
-El sistema busca brindar una solución sencilla y eficiente para procesos como el registro de productos, consulta de existencias, actualización de información y control de entradas y salidas de inventario. De esta manera, se pretende reducir errores asociados al manejo manual de la información y facilitar el seguimiento de los productos disponibles.
+El sistema contempla procesos como el registro y consulta de productos, la administración de categorías, el control de existencias y el seguimiento de entradas y salidas de inventario.
 
-El proyecto será desarrollado aplicando la metodología Scrum, permitiendo organizar el trabajo en iteraciones, definir requerimientos mediante historias de usuario y realizar entregas progresivas de las funcionalidades del sistema.
+El desarrollo se organiza mediante la metodología Scrum, utilizando Sprints para planificar, implementar y revisar progresivamente las funcionalidades del sistema.
 
 ## Objetivo general
 
-Desarrollar un sistema web de gestión de inventarios que permita administrar de manera organizada y eficiente la información relacionada con los productos, sus existencias y los movimientos de inventario, facilitando el control y seguimiento de los recursos disponibles.
+Desarrollar un sistema web de gestión de inventarios que permita administrar productos, controlar existencias y registrar los movimientos de inventario de manera organizada y eficiente.
 
 ## Objetivos específicos
 
 - Diseñar una solución web que permita registrar, consultar, actualizar y administrar productos.
 - Implementar funcionalidades para el control de entradas y salidas de inventario.
-- Mantener la información del inventario organizada y centralizada.
-- Facilitar la consulta de las existencias disponibles y el estado de los productos.
-- Diseñar una arquitectura que permita que el sistema sea organizado, mantenible y escalable.
-- Aplicar la metodología Scrum para planificar, desarrollar y realizar seguimiento al proyecto.
+- Mantener la información organizada y centralizada.
+- Facilitar la consulta de existencias y el estado de los productos.
+- Diseñar una arquitectura organizada, mantenible y escalable.
+- Aplicar Scrum para planificar y realizar seguimiento al desarrollo.
 
 ## Alcance
 
-El proyecto contempla el análisis, diseño, desarrollo y puesta en funcionamiento de una aplicación web para la gestión y control básico de inventarios, orientada a facilitar el registro, consulta y seguimiento de los productos y de los movimientos que afectan sus existencias.
+El sistema contempla la gestión de productos, categorías, usuarios, roles, existencias y movimientos de inventario. También considera el seguimiento de las operaciones mediante el módulo de auditoría.
 
-El sistema permitirá administrar la información asociada a los productos, incluyendo su registro, actualización, consulta y clasificación. Asimismo, permitirá consultar las existencias disponibles y mantener actualizadas las cantidades de inventario a partir del registro de movimientos de entrada y salida de productos.
+La gestión de proveedores fue contemplada en la descripción inicial del proyecto; sin embargo, actualmente no existe una tabla de proveedores en el esquema implementado de la base de datos.
 
-Dentro del alcance funcional se contempla el desarrollo de los siguientes módulos y funcionalidades principales:
-
-- Gestión de productos: registro, consulta, modificación y organización de los productos almacenados en el sistema.
-- Clasificación de productos: organización de los productos mediante categorías y/o subcategorías para facilitar su búsqueda y administración.
-- Consulta de inventario: visualización de las existencias actuales de cada producto.
-- Movimientos de inventario: registro de entradas y salidas de productos, permitiendo mantener un historial de los movimientos realizados.
-- Actualización de existencias: modificación de las cantidades disponibles de acuerdo con los movimientos registrados.
-- Búsqueda y consulta: mecanismos de búsqueda y filtrado que permitan localizar productos e información del inventario de manera eficiente.
-- Gestión de usuarios y permisos: control del acceso a las funcionalidades del sistema de acuerdo con los roles definidos para el proyecto.
-- Persistencia de la información: almacenamiento de los datos del inventario y sus movimientos en una base de datos.
-- Interfaz de usuario: desarrollo de una interfaz web clara, intuitiva y consistente que facilite la interacción con las funcionalidades principales del sistema.
-
-El sistema estará orientado a usuarios encargados de la administración y control del inventario. Las funcionalidades disponibles para cada usuario dependerán de los roles y permisos establecidos durante el diseño del sistema.
-
-El proyecto no contempla, dentro de su alcance inicial, funcionalidades relacionadas con facturación electrónica, contabilidad, comercio electrónico, integración con plataformas externas, control financiero o procesos empresariales que no estén directamente relacionados con la gestión básica del inventario. Estas funcionalidades podrán considerarse como posibles ampliaciones futuras.
-
-El desarrollo se realizará bajo la metodología Scrum, mediante ciclos incrementales denominados Sprints. En cada Sprint se priorizarán, diseñarán, desarrollarán y validarán determinadas funcionalidades, permitiendo obtener incrementos funcionales del producto y realizar ajustes de acuerdo con los resultados de las revisiones y las necesidades identificadas durante el desarrollo.
+Las funcionalidades descritas corresponden al alcance general del proyecto. Su disponibilidad actual depende del estado de implementación de cada módulo.
 
 ## Funcionamiento general
 
 1. El usuario accede al sistema mediante un navegador.
-2. El frontend presenta formularios, tablas, filtros y opciones según los permisos del usuario.
+2. El frontend presenta las interfaces para interactuar con las funcionalidades disponibles.
 3. El frontend envía solicitudes HTTP a la API REST.
-4. La API verifica la autenticación, los permisos y los datos recibidos.
+4. La API valida la autenticación y los datos recibidos en las rutas protegidas.
 5. Cada solicitud se dirige al módulo correspondiente.
-6. La capa de negocio aplica las reglas del inventario.
+6. La lógica del backend aplica las operaciones y reglas de inventario implementadas.
 7. La capa de acceso a datos consulta o modifica la información almacenada en MySQL.
-8. La API devuelve una respuesta en formato JSON y el frontend actualiza la interfaz.
+8. La API devuelve una respuesta en formato JSON para su procesamiento por el frontend.
+
+**Nota:** el backend utiliza autenticación mediante tokens JWT. La autorización diferenciada por roles todavía no se encuentra implementada en el mecanismo de protección de rutas revisado.
 
 ## Módulos del sistema
 
-| Módulo | Responsabilidad principal | Funciones |
+| Módulo | Responsabilidad principal | Estado actual |
 |---|---|---|
-| Autenticación | Controlar el acceso | Inicio y cierre de sesión |
-| Usuarios y permisos | Administrar roles y autorizaciones | Crear usuarios, asignar roles y validar permisos |
-| Productos | Administrar productos | Registrar, consultar, modificar y desactivar |
-| Categorías | Clasificar productos | Crear categorías y subcategorías |
-| Inventario | Consultar existencias | Mostrar cantidades actuales y alertas |
-| Movimientos | Registrar cambios de inventario | Entradas, salidas e historial |
-| Existencias | Actualizar cantidades | Incrementar o disminuir el inventario |
-| Búsqueda | Localizar información | Buscar y filtrar productos y movimientos |
-| Auditoría | Facilitar el seguimiento | Registrar usuario, fecha y operación |
+| Autenticación | Inicio de sesión y validación de tokens | Parcialmente implementado |
+| Usuarios y permisos | Administración de cuentas, roles y autorizaciones | Pendiente de endpoints de administración |
+| Productos | Registrar, consultar y actualizar productos | Implementado parcialmente |
+| Categorías | Consultar y registrar categorías y subcategorías | Implementado parcialmente |
+| Inventario | Consultar existencias y alertas de stock bajo | Implementado |
+| Movimientos | Registrar entradas, salidas y consultar historial | Implementado |
+| Existencias | Actualizar cantidades según los movimientos | Implementado en las operaciones de movimientos |
+| Búsqueda | Buscar y filtrar productos y movimientos | Pendiente de filtros específicos |
+| Auditoría | Registrar y consultar operaciones del sistema | Estructura de base de datos implementada; integración pendiente |
 
 ## Estructuración modular inicial
 
@@ -109,34 +95,157 @@ inventario/
 └── documentation/
 ```
 
+Esta estructura corresponde a una propuesta inicial de organización modular. La estructura real del backend se encuentra en `backend/app/` y utiliza Flask.
+
+Los módulos `authentication`, `categories`, `inventory`, `movements` y `products` cuentan con rutas registradas en la aplicación. Las carpetas `users`, `roles` y `configuraciones` existen, pero no tienen endpoints registrados en el backend revisado.
+
+## API REST — Endpoints implementados
+
+El backend utiliza Python y Flask para exponer los servicios mediante una API REST. Las siguientes rutas fueron identificadas en el código fuente:
+
+| Método HTTP | Endpoint | Funcionalidad | Acceso |
+|---|---|---|---|
+| GET | `/` | Verificar funcionamiento de la API | Público |
+| GET | `/api/health` | Consultar estado de la API | Público |
+| POST | `/api/auth/login` | Iniciar sesión y generar token JWT | Público |
+| GET | `/api/perfil` | Consultar perfil del usuario autenticado | JWT |
+| GET | `/api/productos` | Consultar productos | JWT |
+| POST | `/api/productos` | Registrar un producto | JWT |
+| GET | `/api/productos/{id_producto}` | Consultar un producto por identificador | JWT |
+| PUT | `/api/productos/{id_producto}` | Actualizar un producto | JWT |
+| GET | `/api/categorias` | Consultar categorías | JWT |
+| POST | `/api/categorias` | Registrar categorías y subcategorías | JWT |
+| GET | `/api/inventario` | Consultar existencias y productos con stock bajo | JWT |
+| GET | `/api/movimientos` | Consultar historial de movimientos | JWT |
+| POST | `/api/movimientos` | Registrar entradas y salidas | JWT |
+
+**Consideraciones sobre la API:**
+
+- `{id_producto}` representa el identificador entero del producto.
+- Las rutas protegidas requieren un token JWT enviado mediante el encabezado `Authorization: Bearer`.
+- El token tiene una vigencia de 30 minutos.
+- La autenticación utiliza contraseñas protegidas mediante bcrypt y tokens JWT con algoritmo HS256.
+- La protección de rutas valida la autenticación, pero no aplica actualmente una autorización diferenciada por rol.
+- No se identificaron endpoints para administración de usuarios, roles, consulta de auditoría ni cierre de sesión.
+
 ## Base de datos
 
 La persistencia de la información del sistema se realiza mediante **MySQL**.
 
-La estructura actual de la base de datos contempla las siguientes entidades principales:
+La base de datos `gestion_inventarios` cuenta actualmente con seis tablas principales:
 
-- **Usuarios:** gestión de las cuentas y acceso de los usuarios.
-- **Roles:** definición de los roles y permisos de acceso.
-- **Productos:** información y estado de los productos registrados.
-- **Categorías:** clasificación de los productos, incluyendo categorías y subcategorías.
-- **Movimientos:** registro de las entradas y salidas de inventario.
-- **Auditoría:** almacenamiento de información relacionada con el usuario, módulo, acción, fecha y detalle de las operaciones.
+| Tabla | Responsabilidad |
+|---|---|
+| `roles` | Almacenar los roles del sistema. |
+| `usuarios` | Gestionar las cuentas de usuario. |
+| `categorias` | Clasificar los productos. |
+| `productos` | Almacenar la información y las existencias de los productos. |
+| `movimientos` | Registrar las entradas y salidas de inventario. |
+| `auditoria` | Almacenar información relacionada con las operaciones del sistema. |
 
-**Nota sobre proveedores:** la gestión de proveedores fue contemplada en la descripción inicial del proyecto; sin embargo, actualmente no existe una tabla de proveedores en el esquema implementado de la base de datos.
-
-La base de datos permite mantener centralizada la información del inventario y conservar el historial de los movimientos realizados.
-
-### Estado actual de la base de datos
-
-La estructura de la base de datos se encuentra implementada y documentada. Actualmente contempla:
+La estructura contempla:
 
 - Modelo entidad-relación.
 - Definición de tablas, campos y relaciones.
 - Claves primarias y foráneas.
-- Restricciones de integridad e índices.
-- Script SQL para la creación de la base de datos.
-- Scripts SQL para pruebas y verificación.
+- Restricciones de integridad.
+- Índices para consultas.
+- Scripts SQL para creación, pruebas y verificación.
 
-Se cuenta con seis tablas principales: `roles`, `usuarios`, `categorias`, `productos`, `movimientos` y `auditoria`.
+El esquema incorpora índices secundarios para las relaciones, búsquedas por estado, fechas y consultas relacionadas con auditoría.
 
-El registro automático de acciones en la tabla de auditoría y su integración con las operaciones del sistema se encuentran pendientes de verificación e implementación.
+**Nota sobre auditoría:** la tabla y sus relaciones están creadas, pero la implementación del registro automático de operaciones y su integración con el backend se encuentran pendientes.
+
+## Pruebas de base de datos
+
+Se realizaron pruebas manuales mediante scripts SQL para verificar las operaciones de inventario.
+
+En las pruebas del Sprint 3 se verificó:
+
+- Registro de una entrada de productos.
+- Registro de una salida de productos.
+- Actualización de las existencias.
+- Consulta de los movimientos registrados.
+- Reversión de los cambios mediante `ROLLBACK`, conservando los datos originales.
+
+Como resultado de la prueba:
+
+- Existencia inicial: 20 unidades.
+- Después de una entrada de 5 unidades: 25 unidades.
+- Después de una salida de 3 unidades: 22 unidades.
+- Después del `ROLLBACK`: 20 unidades.
+
+En el Sprint 4 se verificó la estructura de auditoría, sus relaciones, los índices y la ausencia de triggers, procedimientos y funciones almacenadas.
+
+Los scripts de verificación se encuentran en `database/scripts/`.
+
+## Documentación
+
+La documentación técnica y funcional del proyecto se encuentra en la carpeta `documentation/`.
+
+Incluye:
+
+- Presentación del proyecto.
+- Estructura del repositorio.
+- Lógica del sistema.
+- Arquitectura.
+- Modelo de desarrollo.
+- Historias de usuario y criterios de aceptación.
+- Avances por Sprint.
+- Diagrama entidad-relación.
+- Evidencias de las pruebas de base de datos.
+
+## Estado del proyecto
+
+El proyecto cuenta con:
+
+- Estructura de base de datos implementada y verificada.
+- Operaciones de registro y consulta de productos.
+- Consulta y registro de categorías.
+- Consulta de existencias.
+- Registro de entradas y salidas de inventario.
+- Consulta del historial de movimientos.
+- Autenticación mediante JWT.
+- Documentación de planificación, arquitectura y funcionalidades.
+- Pruebas manuales de operaciones de inventario.
+- Evidencias organizadas de los Sprints 3 y 4.
+
+Se encuentran pendientes:
+
+- Implementación del cierre de sesión y mecanismos de invalidación de tokens.
+- Autorización diferenciada por roles.
+- Administración de usuarios y roles mediante API.
+- Búsquedas y filtros específicos.
+- Funcionalidades de dashboard.
+- Endpoints de edición y eliminación de categorías.
+- Registro automático de auditoría e integración con el backend.
+- Consulta de registros de auditoría.
+
+El estado detallado de las funcionalidades se encuentra en `documentation/06-historias-usuario.md`.
+
+## Tecnologías principales
+
+- **Backend:** Python y Flask.
+- **Base de datos:** MySQL.
+- **Autenticación:** JWT y bcrypt.
+- **Comunicación:** API REST y JSON.
+- **Frontend:** aplicación web.
+- **Metodología:** Scrum.
+- **Control de versiones:** Git y GitHub.
+
+## Organización del repositorio
+
+```text
+Gestion-de-inventarios/
+├── backend/
+├── database/
+│   ├── scripts/
+│   └── schema.sql
+├── documentation/
+│   ├── mockups/
+│   ├── evidencias/
+│   └── documentación del proyecto
+└── README.md
+```
+
+Para conocer los detalles de la arquitectura, las historias de usuario, el modelo de datos y los avances de cada Sprint, consulta los documentos de la carpeta `documentation/`.

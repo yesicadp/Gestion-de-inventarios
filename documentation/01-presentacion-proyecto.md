@@ -6,7 +6,7 @@ El proyecto consiste en el desarrollo de un sistema web para la gestión y contr
 
 El sistema busca brindar una solución sencilla y eficiente para procesos como el registro de productos, consulta de existencias, actualización de información y control de entradas y salidas de inventario, reduciendo errores asociados al manejo manual de la información.
 
-El proyecto se desarrolla aplicando la metodología **Scrum**, organizando el trabajo en iteraciones (sprints), definiendo requerimientos mediante historias de usuario y realizando entregas progresivas de las funcionalidades del sistema.
+El proyecto se desarrolla aplicando la metodología **Scrum**, organizando el trabajo en iteraciones (Sprints), definiendo requerimientos mediante historias de usuario y realizando entregas progresivas de las funcionalidades del sistema.
 
 ## Objetivo general
 
@@ -29,26 +29,32 @@ Dentro del alcance funcional se contemplan los siguientes módulos:
 
 | Módulo | Responsabilidad principal |
 |---|---|
-| Autenticación | Controlar el acceso al sistema |
-| Usuarios y permisos | Administrar roles y autorizaciones |
-| Productos | Registrar, consultar, modificar y desactivar productos |
-| Categorías | Clasificar productos mediante categorías y subcategorías |
-| Inventario | Consultar existencias actuales y alertas |
-| Movimientos | Registrar entradas, salidas e historial |
-| Búsqueda | Localizar productos y movimientos |
-| Auditoría | Registrar usuario, fecha y operación de cada acción relevante |
+| Autenticación | Controlar el acceso al sistema. |
+| Usuarios y permisos | Administrar usuarios, roles y autorizaciones. |
+| Productos | Registrar, consultar, modificar y desactivar productos. |
+| Categorías | Clasificar productos mediante categorías y subcategorías. |
+| Inventario | Consultar existencias actuales y alertas. |
+| Movimientos | Registrar entradas, salidas e historial. |
+| Búsqueda | Localizar productos y movimientos. |
+| Auditoría | Registrar usuario, fecha y operación de cada acción relevante. |
+
+Las funcionalidades anteriores representan el alcance funcional previsto del proyecto. Su estado de implementación se detalla en `06-historias-usuario.md`.
 
 ## Roles del sistema
 
-| Rol | Descripción |
+El diseño funcional contempla dos roles principales:
+
+| Rol | Responsabilidad prevista |
 |---|---|
-| **Administrador** | Acceso total: gestión de usuarios y roles, gestión completa de productos y categorías, consulta de inventario, movimientos y auditoría. |
-| **Usuario** | Acceso operativo: consulta de productos e inventario, registro de movimientos de entrada/salida, búsqueda y filtrado. No gestiona usuarios ni roles. |
+| **Administrador** | Gestionar usuarios y roles, administrar productos y categorías, y consultar inventario, movimientos y auditoría. |
+| **Usuario** | Consultar productos e inventario, registrar movimientos de entrada y salida y utilizar las funcionalidades operativas disponibles. |
+
+**Estado de implementación:** los roles se encuentran definidos en la estructura de la base de datos. Sin embargo, la autorización diferenciada por roles y la administración de usuarios mediante endpoints todavía están pendientes de implementación.
 
 ## Equipo de trabajo
 
 | Integrante | Frente | Responsabilidad |
 |---|---|---|
-| _Yesica y Felipe_ | Frontend | HTML, CSS, JavaScript — interfaz de usuario y consumo de la API |
-| _Rowinzon y Felipe_ | Backend | Python (API REST) — lógica de negocio y endpoints |
-| _Maicol y Felipe_ | Base de datos | Diseño e implementación en MySQL |
+| _Yesica_ | Frontend | HTML, CSS, JavaScript — interfaz de usuario y consumo de la API. |
+| _Felipe_ | Backend | Python (API REST) — lógica de negocio y endpoints. |
+| _Maicol_ | Base de datos | Diseño e implementación en MySQL. |

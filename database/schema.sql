@@ -1,55 +1,99 @@
+
 CREATE DATABASE IF NOT EXISTS gestion_inventarios
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 USE gestion_inventarios;
 
+-- =========================================
+-- TABLA: roles
+-- =========================================
+
 CREATE TABLE roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_rol VARCHAR(50) NOT NULL UNIQUE
-);
+    nombre_rol VARCHAR(50) NOT NULL,
+
+    CONSTRAINT uq_roles_nombre_rol
+        UNIQUE (nombre_rol)
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: usuarios
+-- =========================================
 
 CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    correo VARCHAR(150) NOT NULL UNIQUE,
+    correo VARCHAR(150) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     rol_id INT NOT NULL,
     estado BOOLEAN NOT NULL DEFAULT TRUE,
 
-    FOREIGN KEY (rol_id)
+    CONSTRAINT uq_usuarios_correo
+        UNIQUE (correo),
+
+    INDEX idx_usuarios_rol_id (rol_id),
+
+    CONSTRAINT fk_usuarios_rol
+        FOREIGN KEY (rol_id)
         REFERENCES roles(id_rol)
         ON DELETE RESTRICT
-);
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: categorias
+-- =========================================
 
 CREATE TABLE categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     categoria_padre_id INT NULL,
 
-    FOREIGN KEY (categoria_padre_id)
-        REFERENCES categorias(id_categoria)
-        ON DELETE RESTRICT,
+    CONSTRAINT uq_categorias_nombre_padre
+        UNIQUE (nombre, categoria_padre_id),
 
-    UNIQUE (nombre, categoria_padre_id)
-);
+    INDEX idx_categorias_padre_id (categoria_padre_id),
+
+    CONSTRAINT fk_categorias_padre
+        FOREIGN KEY (categoria_padre_id)
+        REFERENCES categorias(id_categoria)
+        ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: productos
+-- =========================================
 
 CREATE TABLE productos (
     id_producto INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
-    codigo VARCHAR(50) NOT NULL UNIQUE,
+    codigo VARCHAR(50) NOT NULL,
     categoria_id INT NOT NULL,
     existencia_actual INT NOT NULL DEFAULT 0,
     existencia_minima INT NOT NULL DEFAULT 0,
     estado BOOLEAN NOT NULL DEFAULT TRUE,
 
-    FOREIGN KEY (categoria_id)
+    CONSTRAINT uq_productos_codigo
+        UNIQUE (codigo),
+
+    INDEX idx_productos_estado (estado),
+    INDEX idx_productos_categoria_estado (categoria_id, estado),
+
+    CONSTRAINT fk_productos_categoria
+        FOREIGN KEY (categoria_id)
         REFERENCES categorias(id_categoria)
         ON DELETE RESTRICT,
 
-    CHECK (existencia_actual >= 0),
-    CHECK (existencia_minima >= 0)
-);
+    CONSTRAINT chk_productos_existencia_actual
+        CHECK (existencia_actual >= 0),
+
+    CONSTRAINT chk_productos_existencia_minima
+        CHECK (existencia_minima >= 0)
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: movimientos
+-- =========================================
 
 CREATE TABLE movimientos (
     id_movimiento INT AUTO_INCREMENT PRIMARY KEY,
@@ -61,17 +105,30 @@ CREATE TABLE movimientos (
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     existencia_resultante INT NOT NULL,
 
-    FOREIGN KEY (producto_id)
+    INDEX idx_movimientos_usuario_id (usuario_id),
+    INDEX idx_movimientos_fecha (fecha),
+    INDEX idx_movimientos_producto_fecha (producto_id, fecha),
+
+    CONSTRAINT fk_movimientos_producto
+        FOREIGN KEY (producto_id)
         REFERENCES productos(id_producto)
         ON DELETE RESTRICT,
 
-    FOREIGN KEY (usuario_id)
+    CONSTRAINT fk_movimientos_usuario
+        FOREIGN KEY (usuario_id)
         REFERENCES usuarios(id_usuario)
         ON DELETE RESTRICT,
 
-    CHECK (cantidad > 0),
-    CHECK (existencia_resultante >= 0)
-);
+    CONSTRAINT chk_movimientos_cantidad
+        CHECK (cantidad > 0),
+
+    CONSTRAINT chk_movimientos_existencia_resultante
+        CHECK (existencia_resultante >= 0)
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: auditoria
+-- =========================================
 
 CREATE TABLE auditoria (
     id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,46 +136,22 @@ CREATE TABLE auditoria (
     modulo VARCHAR(50) NOT NULL,
     accion VARCHAR(50) NOT NULL,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    detalle VARCHAR(255),
+    detalle VARCHAR(255) NULL,
 
-    FOREIGN KEY (usuario_id)
+    INDEX idx_auditoria_modulo (modulo),
+    INDEX idx_auditoria_fecha (fecha),
+    INDEX idx_auditoria_usuario_modulo_fecha
+        (usuario_id, modulo, fecha),
+
+    CONSTRAINT fk_auditoria_usuario
+        FOREIGN KEY (usuario_id)
         REFERENCES usuarios(id_usuario)
         ON DELETE RESTRICT
-);
+) ENGINE=InnoDB;
 
-
--- INDICES ADICIONALES
-
-CREATE INDEX idx_usuarios_rol_id
-ON usuarios (rol_id);
-
-CREATE INDEX idx_categorias_padre_id
-ON categorias (categoria_padre_id);
-
-CREATE INDEX idx_productos_estado
-ON productos (estado);
-
-CREATE INDEX idx_productos_categoria_estado
-ON productos (categoria_id, estado);
-
-CREATE INDEX idx_movimientos_usuario_id
-ON movimientos (usuario_id);
-
-CREATE INDEX idx_movimientos_fecha
-ON movimientos (fecha);
-
-CREATE INDEX idx_movimientos_producto_fecha
-ON movimientos (producto_id, fecha);
-
-CREATE INDEX idx_auditoria_modulo
-ON auditoria (modulo);
-
-CREATE INDEX idx_auditoria_fecha
-ON auditoria (fecha);
-
-CREATE INDEX idx_auditoria_usuario_modulo_fecha
-ON auditoria (usuario_id, modulo, fecha);
-
+-- =========================================
+-- DATOS INICIALES: ROLES
+-- =========================================
 
 INSERT INTO roles (nombre_rol)
 VALUES
