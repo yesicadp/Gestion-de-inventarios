@@ -8,6 +8,8 @@ from app.modules.inventory.routes import inventory_bp
 from app.modules.movements.routes import movements_bp
 from app.modules.audit.routes import audit_bp
 from app.shared.exceptions.errores import registrar_manejadores
+from app.modules.roles.routes import roles_bp
+from app.modules.users.routes import users_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +19,8 @@ app.register_blueprint(categories_bp)
 app.register_blueprint(inventory_bp)
 app.register_blueprint(movements_bp)
 app.register_blueprint(audit_bp)
+app.register_blueprint(roles_bp)
+app.register_blueprint(users_bp)
 registrar_manejadores(app)
 
 @app.get("/")
