@@ -5,6 +5,7 @@ const API_ROLES = "http://127.0.0.1:5000/api/roles";
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const usuarioSesion = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const nombreEncabezado = document.getElementById("user-name");
   const rolSesion = usuarioSesion.rol || usuarioSesion.nombre_rol || "";
 
   const formulario = document.getElementById("form-usuario");
@@ -86,6 +87,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       usuarios = datos.usuarios || [];
+
+      const usuarioActualizado = usuarios.find(
+        usuario => Number(usuario.id_usuario) === Number(usuarioSesion.id)
+      );
+
+      if (usuarioActualizado && nombreEncabezado) {
+        nombreEncabezado.textContent = usuarioActualizado.nombre;
+
+        usuarioSesion.nombre = usuarioActualizado.nombre;
+        localStorage.setItem("usuario", JSON.stringify(usuarioSesion));
+      }
+
       mostrarUsuarios();
 
       mensaje.textContent = usuarios.length

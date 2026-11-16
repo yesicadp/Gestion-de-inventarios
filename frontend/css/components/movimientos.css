@@ -77,6 +77,23 @@
 
 .movement-actions button {
   min-width: 170px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
+}
+.movement-actions .btn-primary {
+  border: 1px solid var(--primary-color);
+  border-radius: var(--radius);
+  background: var(--primary-color);
+  color: white;
+}
+
+.movement-actions .btn-primary:hover {
+  background: var(--primary-hover);
 }
 
 .movement-actions button:disabled {

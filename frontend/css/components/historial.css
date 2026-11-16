@@ -77,6 +77,13 @@
 
 .history-toolbar button {
   min-height: 42px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
 }
 
 /* ========================================
