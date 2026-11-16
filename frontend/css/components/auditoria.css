@@ -1,0 +1,112 @@
+
+.audit-panel {
+  padding: 24px;
+}
+
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.audit-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.audit-filter-field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.audit-filter-field input,
+.audit-filter-field select {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid #d5d5d5;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.audit-filter-actions {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.audit-message {
+  margin: 15px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.audit-table th,
+.audit-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.audit-table th {
+  font-weight: 600;
+  background: #f7f7f7;
+}
+
+.audit-table td:last-child {
+  min-width: 230px;
+  max-width: 380px;
+  overflow-wrap: anywhere;
+}
+
+.audit-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.audit-pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.audit-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .audit-filters {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .audit-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-filter-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .audit-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

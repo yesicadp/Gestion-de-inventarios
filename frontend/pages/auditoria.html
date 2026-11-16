@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría - Gestión de Inventarios</title>
+
+  <link rel="stylesheet" href="../css/base/global.css">
+  <link rel="stylesheet" href="../css/components/dashboard.css">
+  <link rel="stylesheet" href="../css/components/auditoria.css">
+</head>
+<body class="app-body">
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Gestión de Inventarios</div>
+      <nav>
+        <a href="dashboard.html">Panel principal</a>
+        <a href="productos.html">Productos</a>
+        <a href="categorias.html">Categorías</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="movimiento-form.html">Movimientos</a>
+        <a href="historial.html">Historial</a>
+        <a href="usuarios.html" data-solo-admin>Usuarios</a>
+        <a href="auditoria.html" class="active" data-solo-admin>Auditoría</a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="user-info">
+          <span>Hola, <strong id="user-name">—</strong></span>
+          <span class="role-badge" id="user-role">—</span>
+        </div>
+        <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
+      </header>
+
+      <main class="content">
+        <h1>Auditoría</h1>
+        <p class="subtitle">
+          Consulta y revisa las actividades realizadas por los usuarios del sistema.
+        </p>
+
+        <section class="panel audit-panel">
+
+          <form id="form-filtros" class="audit-filters">
+
+            <div class="audit-filter-field">
+              <label for="filtro-busqueda">Buscar</label>
+              <input
+                type="search"
+                id="filtro-busqueda"
+                placeholder="Buscar en los detalles..."
+              >
+            </div>
+
+            <div class="audit-filter-field">
+              <label for="filtro-usuario">Usuario</label>
+              <select id="filtro-usuario">
+                <option value="">Todos los usuarios</option>
+              </select>
+            </div>
+
+            <div class="audit-filter-field">
+              <label for="filtro-modulo">Módulo</label>
+              <input
+                type="text"
+                id="filtro-modulo"
+                placeholder="Ej. productos"
+              >
+            </div>
+
+            <div class="audit-filter-field">
+              <label for="filtro-accion">Acción</label>
+              <input
+                type="text"
+                id="filtro-accion"
+                placeholder="Ej. CREAR"
+              >
+            </div>
+
+            <div class="audit-filter-field">
+              <label for="filtro-desde">Desde</label>
+              <input type="date" id="filtro-desde">
+            </div>
+
+            <div class="audit-filter-field">
+              <label for="filtro-hasta">Hasta</label>
+              <input type="date" id="filtro-hasta">
+            </div>
+
+            <div class="audit-filter-actions">
+              <button type="submit" class="btn-primary">
+                Buscar
+              </button>
+              <button type="button" id="btn-limpiar-filtros" class="btn-secondary">
+                Limpiar filtros
+              </button>
+            </div>
+
+          </form>
+
+          <p id="mensaje-auditoria" class="audit-message" role="status">
+            Cargando registros...
+          </p>
+
+          <div class="table-container">
+            <table class="audit-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Usuario</th>
+                  <th>Módulo</th>
+                  <th>Acción</th>
+                  <th>Fecha</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-auditoria"></tbody>
+            </table>
+          </div>
+
+          <div class="audit-footer">
+            <span id="contador-auditoria">0 registros</span>
+
+            <div class="audit-pagination">
+              <button type="button" id="btn-anterior" class="btn-secondary">
+                Anterior
+              </button>
+
+              <span id="pagina-actual">Página 1 de 1</span>
+
+              <button type="button" id="btn-siguiente" class="btn-secondary">
+                Siguiente
+              </button>
+            </div>
+          </div>
+
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/sesion.js"></script>
+  <script src="../js/auditoria.js"></script>
+</body>
+</html>
