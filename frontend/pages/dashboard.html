@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,12 +38,12 @@
       <main class="content">
         <h1>Panel principal</h1>
         <p class="subtitle">Resumen general del inventario</p>
-        
+
         <div class="panel">
           <h2>Estado de la conexión</h2>
           <div class="status-line">
             <span class="status-dot" id="status-dot"></span>
-            <span id="status-text">Verificando sesión con el backend…</span>
+            <span id="status-text">Verificando conexión con el backend...</span>
           </div>
         </div>
 
@@ -55,13 +56,14 @@
           <div class="stat-card">
             <div class="label">Existencias bajas</div>
             <div class="value" id="total-existencias-bajas">—</div>
-            <div class="pending-note">Productos en su nivel mínimo o por debajo</div>
+            <div class="pending-note">
+              Productos en su nivel mínimo o por debajo
+            </div>
           </div>
 
           <div class="stat-card">
             <div class="label">Movimientos hoy</div>
-            <div class="value">—</div>
-            <div class="pending-note">Pendiente: conectar a GET /api/movimientos</div>
+            <div class="value" id="total-movimientos-hoy">—</div>
           </div>
 
           <div class="stat-card">
@@ -70,10 +72,35 @@
           </div>
         </div>
 
-        <div class="panel">
-          <h2>Últimos movimientos registrados</h2>
-          <p class="pending-note">Esta tabla se llena cuando el módulo de Movimientos tenga su endpoint en el backend. Ver 09-especificacion-frontend.md para el contrato esperado.</p>
-        </div>
+        <section class="panel">
+          <div class="dashboard-section-header">
+            <h2>Últimos movimientos registrados</h2>
+            <a href="historial.html" class="dashboard-link">
+              Ver historial completo
+            </a>
+          </div>
+
+          <p id="mensaje-movimientos" class="pending-note">
+            Cargando movimientos...
+          </p>
+
+          <div class="table-container">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Tipo</th>
+                  <th>Cantidad</th>
+                  <th>Usuario</th>
+                  <th>Fecha</th>
+                  <th>Motivo</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-ultimos-movimientos"></tbody>
+            </table>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>

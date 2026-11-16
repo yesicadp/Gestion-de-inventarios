@@ -184,3 +184,122 @@ body.app-body {
 .hidden {
   display: none !important;
 }
+
+/* Encabezado de últimos movimientos */
+.dashboard-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.dashboard-section-header h2 {
+  margin: 0;
+}
+
+/* Enlace al historial completo */
+.dashboard-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 9px 14px;
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-link:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.dashboard-link:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-link {
+    align-self: flex-start;
+  }
+}
+
+
+/* Tabla de últimos movimientos */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.dashboard-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background-color: var(--card-bg);
+  font-size: 13px;
+}
+
+.dashboard-table thead {
+  background-color: var(--bg-color);
+}
+
+.dashboard-table th {
+  padding: 13px 12px;
+  color: var(--primary-color);
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.dashboard-table td {
+  padding: 13px 12px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: var(--bg-color);
+}
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Etiquetas de entrada y salida */
+.movement-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.movement-entry {
+  background-color: #e4f5e9;
+  color: #24743b;
+}
+
+.movement-exit {
+  background-color: #fde8e8;
+  color: #a52a2a;
+}
