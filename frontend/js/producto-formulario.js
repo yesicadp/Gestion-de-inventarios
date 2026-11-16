@@ -150,8 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const minimo = Number(minimoTexto);
     const estado = campos.estado.value === "activo" ? 1 : 0;
 
-    if (!codigo || !nombre || !campos.categoria.value) {
-      mostrarMensaje("Completa todos los campos obligatorios.", true);
+    if ((!productoId && codigo) || (productoId && !codigo) || !nombre || !campos.categoria.value) {
+        mostrarMensaje("Completa todos los campos obligatorios.", true);
       return;
     }
 
@@ -185,12 +185,12 @@ document.addEventListener("DOMContentLoaded", () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          codigo,
-          nombre,
-          categoria_id: categoriaId,
-          existencia_actual: existencia,
-          existencia_minima: minimo,
-          estado
+            ...(productoId ? { codigo } : {}),
+            nombre,
+            categoria_id: categoriaId,
+            existencia_actual: existencia,
+            existencia_minima: minimo,
+            estado
         })
       });
 

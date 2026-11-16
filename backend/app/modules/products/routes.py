@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from mysql.connector import IntegrityError
+import uuid
 
 from app.database.connection import obtener_conexion
 from app.modules.authentication.decorators import requiere_token
@@ -98,7 +99,6 @@ def registrar_producto(datos_usuario):
         }), 400
 
     nombre = datos.get("nombre")
-    codigo = datos.get("codigo")
     categoria_id = datos.get("categoria_id")
     existencia_actual = datos.get("existencia_actual", 0)
     existencia_minima = datos.get("existencia_minima", 0)
@@ -107,11 +107,6 @@ def registrar_producto(datos_usuario):
     if not isinstance(nombre, str) or not nombre.strip():
         return jsonify({
             "mensaje": "El nombre del producto es obligatorio"
-        }), 400
-
-    if not isinstance(codigo, str) or not codigo.strip():
-        return jsonify({
-            "mensaje": "El codigo del producto es obligatorio"
         }), 400
 
     try:
@@ -162,7 +157,7 @@ def registrar_producto(datos_usuario):
         }), 400
 
     nombre = nombre.strip()
-    codigo = codigo.strip()
+   
 
     conexion = None
     cursor = None
@@ -182,16 +177,7 @@ def registrar_producto(datos_usuario):
                 "mensaje": "La categoria seleccionada no existe"
             }), 400
 
-        cursor.execute("""
-            SELECT id_producto
-            FROM productos
-            WHERE codigo = %s
-        """, (codigo,))
-
-        if cursor.fetchone() is not None:
-            return jsonify({
-                "mensaje": "Ya existe un producto con ese codigo"
-            }), 409
+        codigo_temporal = f"TEMP-{uuid.uuid4().hex}"
 
         cursor.execute("""
             INSERT INTO productos (
@@ -205,7 +191,7 @@ def registrar_producto(datos_usuario):
             VALUES (%s, %s, %s, %s, %s, %s)
         """, (
             nombre,
-            codigo,
+            codigo_temporal,
             categoria_id,
             existencia_actual,
             existencia_minima,
@@ -213,6 +199,13 @@ def registrar_producto(datos_usuario):
         ))
 
         producto_id = cursor.lastrowid
+        codigo = f"PROD-{producto_id:03d}"
+
+        cursor.execute("""
+            UPDATE productos
+            SET codigo = %s
+            WHERE id_producto = %s
+        """, (codigo, producto_id))
 
         registrar_auditoria(
             cursor,

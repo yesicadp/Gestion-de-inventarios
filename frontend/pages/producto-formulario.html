@@ -45,18 +45,17 @@
           <form id="form-producto">
             <div class="form-grid">
               <div class="form-field">
-                <label for="codigo">Código del producto *</label>
-                <input
-                  id="codigo"
-                  name="codigo"
-                  type="text"
-                  maxlength="50"
-                  required
-                  placeholder="Ej. PROD-001"
-                >
-                <small class="field-help">
-                  Escribe un código único para identificar el producto.
-                </small>
+                  <label for="codigo">Código del producto</label>
+                  <input
+                      id="codigo"
+                      name="codigo"
+                      type="text"
+                      placeholder="Se genera automáticamente"
+                      readonly
+                  >
+                  <small class="field-help">
+                      El sistema asignará el código al guardar el producto.
+                  </small>
               </div>
 
               <div class="form-field">
