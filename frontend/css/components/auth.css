@@ -153,3 +153,15 @@
 .alert.hidden {
   display: none;
 }
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-autenticacion {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
