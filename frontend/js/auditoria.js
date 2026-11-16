@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const botonAnterior = document.getElementById("btn-anterior");
   const botonSiguiente = document.getElementById("btn-siguiente");
   const botonLimpiar = document.getElementById("btn-limpiar-filtros");
-  const textoPagina = document.getElementById("pagina-actual");
+  const numerosPagina = document.getElementById("numeros-pagina");
 
-  const POR_PAGINA = 50;
+  const POR_PAGINA = 10;
 
   let paginaActual = 1;
   let totalRegistros = 0;
@@ -74,6 +74,72 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error al consultar usuarios:", error);
     }
+  }
+
+  function mostrarPaginacion(totalPaginas) {
+    numerosPagina.innerHTML = "";
+
+    function agregarBoton(numero) {
+      const boton = document.createElement("button");
+
+      boton.type = "button";
+      boton.textContent = numero;
+      boton.className = numero === paginaActual
+        ? "btn-primary active-page"
+        : "btn-secondary";
+
+      boton.addEventListener("click", () => {
+        if (numero !== paginaActual) {
+          paginaActual = numero;
+          consultarAuditoria();
+        }
+      });
+
+      numerosPagina.appendChild(boton);
+    }
+
+    function agregarPuntos() {
+      const puntos = document.createElement("span");
+      puntos.textContent = "...";
+      puntos.className = "pagination-dots";
+      numerosPagina.appendChild(puntos);
+    }
+
+    if (totalPaginas <= 7) {
+      for (let i = 1; i <= totalPaginas; i++) {
+        agregarBoton(i);
+      }
+      return;
+    }
+
+    agregarBoton(1);
+
+    let inicio = Math.max(2, paginaActual - 1);
+    let fin = Math.min(totalPaginas - 1, paginaActual + 1);
+
+    if (paginaActual <= 3) {
+      inicio = 2;
+      fin = 4;
+    }
+
+    if (paginaActual >= totalPaginas - 2) {
+      inicio = totalPaginas - 3;
+      fin = totalPaginas - 1;
+    }
+
+    if (inicio > 2) {
+      agregarPuntos();
+    }
+
+    for (let i = inicio; i <= fin; i++) {
+      agregarBoton(i);
+    }
+
+    if (fin < totalPaginas - 1) {
+      agregarPuntos();
+    }
+
+    agregarBoton(totalPaginas);
   }
 
   async function consultarAuditoria() {
@@ -143,12 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
         agregarCelda(fila, registro.usuario);
         agregarCelda(fila, registro.modulo);
         agregarCelda(fila, registro.accion);
+
         agregarCelda(
           fila,
           registro.fecha
             ? new Date(registro.fecha).toLocaleString("es-CO")
             : "—"
         );
+
         agregarCelda(fila, registro.detalle);
 
         tabla.appendChild(fila);
@@ -173,8 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contador.textContent =
         `${totalRegistros} ${totalRegistros === 1 ? "registro" : "registros"}`;
 
-      textoPagina.textContent =
-        `Página ${paginaActual} de ${totalPaginas}`;
+      mostrarPaginacion(totalPaginas);
 
       botonAnterior.disabled = paginaActual <= 1;
       botonSiguiente.disabled = paginaActual >= totalPaginas;
@@ -210,7 +277,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   botonSiguiente.addEventListener("click", () => {
-    if (paginaActual * POR_PAGINA < totalRegistros) {
+    const totalPaginas = Math.max(
+      1,
+      Math.ceil(totalRegistros / POR_PAGINA)
+    );
+
+    if (paginaActual < totalPaginas) {
       paginaActual++;
       consultarAuditoria();
     }

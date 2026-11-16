@@ -1,74 +1,161 @@
 
 .audit-panel {
   padding: 24px;
+  font-size: 13px;
 }
 
+/* Filtros */
 .audit-filters {
   display: grid;
-  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 20px;
+  align-items: end;
 }
 
 .audit-filter-field {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-width: 0;
 }
 
 .audit-filter-field label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--text-color);
 }
 
 .audit-filter-field input,
 .audit-filter-field select {
+  box-sizing: border-box;
   width: 100%;
+  min-width: 0;
   min-height: 40px;
-  padding: 9px 11px;
-  border: 1px solid #d5d5d5;
-  border-radius: 6px;
-  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 13px;
 }
 
 .audit-filter-actions {
+  grid-column: 1 / -1;
   display: flex;
-  align-items: end;
+  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
+/* Botones */
+.audit-filter-actions button,
+.audit-pagination button {
+  min-height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.audit-filter-actions .btn-primary,
+.audit-pagination .btn-primary {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+}
+
+.audit-filter-actions .btn-primary:hover,
+.audit-pagination .btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.audit-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mensaje */
 .audit-message {
+  min-height: 20px;
   margin: 15px 0;
-  font-size: 14px;
-  color: #555;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Tabla */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .audit-table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 850px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
 }
 
 .audit-table th,
 .audit-table td {
   padding: 13px 12px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
+  vertical-align: middle;
   font-size: 13px;
-  vertical-align: top;
 }
 
 .audit-table th {
+  background: var(--bg-color);
+  color: var(--text-muted);
   font-weight: 600;
-  background: #f7f7f7;
+  white-space: nowrap;
 }
 
-.audit-table td:last-child {
-  min-width: 230px;
-  max-width: 380px;
+.audit-table td {
+  color: var(--text-color);
   overflow-wrap: anywhere;
 }
 
+.audit-table th:nth-child(1),
+.audit-table td:nth-child(1) {
+  width: 65px;
+}
+
+.audit-table th:nth-child(2),
+.audit-table td:nth-child(2) {
+  width: 150px;
+}
+
+.audit-table th:nth-child(3),
+.audit-table td:nth-child(3) {
+  width: 115px;
+}
+
+.audit-table th:nth-child(4),
+.audit-table td:nth-child(4) {
+  width: 110px;
+}
+
+.audit-table th:nth-child(5),
+.audit-table td:nth-child(5) {
+  width: 165px;
+}
+
+.audit-table th:nth-child(6),
+.audit-table td:nth-child(6) {
+  width: auto;
+}
+
+/* Pie y paginación */
 .audit-footer {
   display: flex;
   justify-content: space-between;
@@ -78,20 +165,40 @@
   flex-wrap: wrap;
 }
 
+#contador-auditoria {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
 .audit-pagination {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.audit-pagination button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.audit-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
+.audit-page-numbers button {
+  min-width: 36px;
+  padding: 8px 10px;
+}
+
+.pagination-dots {
+  padding: 0 3px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Responsive */
 @media (max-width: 900px) {
   .audit-filters {
-    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -101,12 +208,20 @@
   }
 
   .audit-filter-actions {
-    align-items: stretch;
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .audit-filter-actions button {
+    width: 100%;
   }
 
   .audit-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .audit-pagination {
+    justify-content: flex-start;
   }
 }
